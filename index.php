@@ -1,7 +1,5 @@
 <!-- index.php -->
-<?php
-include 'includes/db.php';
-?>
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -14,6 +12,9 @@ include 'includes/db.php';
 <div class="container mt-5">
     <h2 class="text-center mb-4">Atleticas Recentes</h2>
     <div class="row">
+    <?php
+include 'includes/db.php';
+?>
         <?php
         $stmt = $pdo->query("SELECT username, profile_photo FROM users ORDER BY created_at DESC LIMIT 10");
         $users = $stmt->fetchAll();
