@@ -1,4 +1,7 @@
 <!-- index.php -->
+<?php
+include 'includes/db.php';
+?>
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>

@@ -1,4 +1,9 @@
 <!-- register.php -->
+<?php
+include 'includes/db.php';
+?>
+
+<!-- register.php -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -30,17 +35,30 @@
 </html>
 
 <?php
+include 'includes/db.php'; // Incluir a conexão com o banco de dados
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Processar os dados
     $username = $_POST['username'];
     $email = $_POST['email'];
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-    // Inserir no banco de dados
-    $stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-    $stmt->execute([$username, $email, $password]);
+    try {
+        // Verifica se o usuário já existe
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ? OR email = ?");
+        $stmt->execute([$username, $email]);
+        if ($stmt->rowCount() > 0) {
+            echo "Usuário ou e-mail já registrado!";
+            exit;
+        }
 
-    // Redirecionar
-    header('Location: login.php');
+        // Inserir no banco de dados
+        $stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+        $stmt->execute([$username, $email, $password]);
+
+        // Redirecionar para o login
+        header('Location: login.php');
+    } catch (Exception $e) {
+        echo "Erro ao registrar: " . $e->getMessage();
+    }
 }
 ?>

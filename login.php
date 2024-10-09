@@ -1,4 +1,8 @@
 <!-- login.php -->
+<?php
+include 'includes/db.php';
+?>
+<!-- login.php -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -24,6 +28,30 @@
 </div>
 </body>
 </html>
+
+<?php
+include 'includes/db.php'; // Incluir a conexão com o banco de dados
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    // Verifica as credenciais
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ?");
+    $stmt->execute([$username]);
+    $user = $stmt->fetch();
+
+    if ($user && password_verify($password, $user['password'])) {
+        // Iniciar sessão
+        session_start();
+        $_SESSION['user_id'] = $user['id'];
+        header('Location: dashboard.php');
+    } else {
+        echo "Usuário ou senha incorretos.";
+    }
+}
+?>
+
 
 <?php
 // Processar o login
