@@ -1,9 +1,4 @@
-<!-- register.php -->
-<?php
-include 'includes/db.php';
-?>
 
-<!-- register.php -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -14,11 +9,19 @@ include 'includes/db.php';
 </head>
 <body>
 <div class="container mt-5">
-    <h2 class="text-center mb-4">Registro</h2>
+    <h2 class="text-center mb-4">Cadastro de Usuário</h2>
     <form action="register.php" method="POST" class="w-50 mx-auto">
         <div class="mb-3">
-            <label for="username" class="form-label">Nome de Usuário</label>
-            <input type="text" class="form-control" id="username" name="username" required>
+            <label for="full_name" class="form-label">Nome Completo</label>
+            <input type="text" class="form-control" id="full_name" name="full_name" required>
+        </div>
+        <div class="mb-3">
+            <label for="cpf" class="form-label">CPF</label>
+            <input type="text" class="form-control" id="cpf" name="cpf" required>
+        </div>
+        <div class="mb-3">
+            <label for="birthdate" class="form-label">Data de Nascimento</label>
+            <input type="date" class="form-control" id="birthdate" name="birthdate" required>
         </div>
         <div class="mb-3">
             <label for="email" class="form-label">E-mail</label>
@@ -28,34 +31,58 @@ include 'includes/db.php';
             <label for="password" class="form-label">Senha</label>
             <input type="password" class="form-control" id="password" name="password" required>
         </div>
+        <div class="mb-3">
+            <label for="confirm_password" class="form-label">Confirmar Senha</label>
+            <input type="password" class="form-control" id="confirm_password" name="confirm_password" required>
+        </div>
+        <div class="mb-3">
+            <label for="terms" class="form-label">Aceita os Termos de Uso?</label>
+            <select class="form-select" id="terms" name="terms" required>
+                <option value="">Selecione...</option>
+                <option value="yes">Sim</option>
+                <option value="no">Não</option>
+            </select>
+        </div>
+        <h4 class="mt-4">Dados da Atlética</h4>
+        <div class="mb-3">
+            <label for="social_media" class="form-label">Link para Mídia Social da Atlética</label>
+            <input type="url" class="form-control" id="social_media" name="social_media" required>
+        </div>
         <button type="submit" class="btn btn-primary w-100">Registrar</button>
     </form>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
 
 <?php
-include 'includes/db.php'; // Incluir a conexão com o banco de dados
+include 'includes/db.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
+    $full_name = $_POST['full_name'];
+    $cpf = $_POST['cpf'];
+    $birthdate = $_POST['birthdate'];
     $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+    $terms = $_POST['terms'];
+    $social_media = $_POST['social_media'];
+
+    if ($password !== $confirm_password) {
+        echo "As senhas não coincidem!";
+        exit;
+    }
+
+    if ($terms !== 'yes') {
+        echo "Você deve aceitar os termos de uso.";
+        exit;
+    }
 
     try {
-        // Verifica se o usuário já existe
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = ? OR email = ?");
-        $stmt->execute([$username, $email]);
-        if ($stmt->rowCount() > 0) {
-            echo "Usuário ou e-mail já registrado!";
-            exit;
-        }
-
-        // Inserir no banco de dados
-        $stmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-        $stmt->execute([$username, $email, $password]);
-
-        // Redirecionar para o login
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $pdo->prepare("INSERT INTO users (full_name, cpf, birthdate, email, password, social_media) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->execute([$full_name, $cpf, $birthdate, $email, $hashed_password, $social_media]);
         header('Location: login.php');
     } catch (Exception $e) {
         echo "Erro ao registrar: " . $e->getMessage();
