@@ -1,4 +1,4 @@
-<!-- index.php --><!-- index.php -->
+<!-- index.php -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -8,7 +8,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<?php include 'includes/db.php'; ?>
 <div class="container mt-3">
     <!-- Header -->
     <header class="d-flex justify-content-between align-items-center mb-4">
