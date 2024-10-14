@@ -1,4 +1,4 @@
-// includes/db.php
+
 <?php
 $host = 'localhost';  // Nome do host
 $dbname = 'wwrajo_atletica'; // Nome do banco de dados
