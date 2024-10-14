@@ -21,7 +21,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $check_stmt->store_result();
 
     if ($check_stmt->num_rows > 0) {
-        echo "Nome de usuário ou email já em uso!";
+        // Exibir um alert em JavaScript quando o nome de usuário ou email já estão em uso
+        echo "<script>alert('Nome de usuário ou email já em uso!'); window.history.back();</script>";
+        exit();
     } else {
         // Inserir o novo usuário no banco de dados
         $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
@@ -48,8 +50,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -79,28 +79,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </script>
 </head>
 <body>
-    <div class="container">
-        <h2>Cadastre-se</h2>
-        <form method="POST" action="register.php">
-            <div class="form-group">
-                <label for="username">Nome de Usuário</label>
-                <input type="text" name="username" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" name="email" class="form-control" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Senha</label>
-                <input type="password" id="password" name="password" class="form-control" onkeyup="checkPasswordStrength()" required>
-                <small id="strength" class="text-muted"></small>
-            </div>
-            <div class="form-group">
-                <label for="confirm_password">Confirme a Senha</label>
-                <input type="password" name="confirm_password" class="form-control" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Registrar</button>
-        </form>
+<form method="POST" action="register.php" onsubmit="return validateEmail()">
+    <div class="form-group">
+        <label for="username">Nome de Usuário</label>
+        <input type="text" name="username" class="form-control" required>
     </div>
+    <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="password">Senha</label>
+        <input type="password" name="password" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Registrar</button>
+</form>
+
+<!-- Script de validação de email -->
+<script>
+    function validateEmail() {
+        var email = document.getElementById("email").value;
+        var re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!re.test(email)) {
+            alert("Por favor, insira um email válido.");
+            return false;
+        }
+        return true;
+    }
+</script>
+
 </body>
 </html>
+
+
