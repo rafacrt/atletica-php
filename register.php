@@ -30,10 +30,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($stmt->execute()) {
             // Enviar o email de confirmação
             if (sendConfirmationEmail($email, $username)) {
-                // Login automático após registro
-                $_SESSION['user_id'] = $stmt->insert_id;
-                $_SESSION['username'] = $username;
-                header("Location: dashboard.php");
+                // Redirecionar para a home com uma mensagem para confirmar o email
+                $_SESSION['confirmation_message'] = "Um email de confirmação foi enviado para $email. Por favor, verifique sua caixa de entrada.";
+                header("Location: index.php");
                 exit();
             } else {
                 echo "Erro ao enviar o email de confirmação!";
@@ -49,6 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 ?>
+
 
 
 <!DOCTYPE html>

@@ -1,10 +1,4 @@
 <?php
-// Ativar a exibição de todos os erros
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-?>
-
-<?php
 session_start();
 ?>
 
@@ -46,6 +40,17 @@ session_start();
 
     <div class="container">
         <h2 class="text-center">Bem-vindo ao Link Manager</h2>
+
+        <!-- Exibir a mensagem de confirmação -->
+        <?php if (isset($_SESSION['confirmation_message'])): ?>
+            <div class="alert alert-success text-center">
+                <?php
+                echo $_SESSION['confirmation_message'];
+                unset($_SESSION['confirmation_message']);  // Remover a mensagem da sessão após exibi-la
+                ?>
+            </div>
+        <?php endif; ?>
+
         <div class="text-center">
             <a href="register.php" class="btn btn-primary">Cadastre-se</a>
             <a href="login.php" class="btn btn-secondary">Login</a>
