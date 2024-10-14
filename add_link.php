@@ -1,4 +1,9 @@
 <?php
+// Ativar a exibição de todos os erros
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+?>
+<?php
 include 'db.php';
 session_start();
 
