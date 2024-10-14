@@ -1,3 +1,4 @@
+
 <?php
 $host = 'localhost';  // Nome do host
 $dbname = 'wwrajo_atletica'; // Nome do banco de dados
@@ -12,3 +13,4 @@ if ($conn->connect_error) {
     die("Erro na conexão com o banco de dados: " . $conn->connect_error);
 }
 ?>
+
