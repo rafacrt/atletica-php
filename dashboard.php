@@ -181,12 +181,6 @@ $stmt->bind_result($link_id, $link_title, $link_url);
 
 
 <?php
-
-// Certifique-se de que este código é chamado apenas uma vez para fechar o statement
-if (isset($stmt) && $stmt instanceof mysqli_stmt) {
-    $stmt->close();  // Fechar apenas uma vez
-}
-
-
+$stmt->close();
 $conn->close();
 ?>
