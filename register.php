@@ -4,29 +4,15 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ?>
 
-
 <?php
-include 'includes/db.php';
-include 'includes/mail.php';
+include 'includes/db.php';  // Incluindo a conexão com o banco de dados
+include 'includes/mail.php';  // Incluindo a função de envio de email
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $email = $_POST['email'];
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
-
-    // Validação de força da senha
-    if (!preg_match('/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/', $password)) {
-        echo "A senha deve ter pelo menos 8 caracteres, incluindo letras e números.";
-        exit();
-    }
-
-    // Verificar se as senhas correspondem
-    if ($password !== $confirm_password) {
-        echo "As senhas não correspondem.";
-        exit();
-    }
+    $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
 
     // Verificar se o nome de usuário ou email já estão registrados
     $check_stmt = $conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
@@ -38,15 +24,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Nome de usuário ou email já em uso!";
     } else {
         // Inserir o novo usuário no banco de dados
-        $password_hash = password_hash($password, PASSWORD_BCRYPT);
         $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $username, $email, $password_hash);
+        $stmt->bind_param("sss", $username, $email, $password);
 
         if ($stmt->execute()) {
             // Enviar o email de confirmação
             if (sendConfirmationEmail($email, $username)) {
                 // Login automático após registro
                 $_SESSION['user_id'] = $stmt->insert_id;
+                $_SESSION['username'] = $username;
                 header("Location: dashboard.php");
                 exit();
             } else {
@@ -63,6 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $conn->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="pt-br">

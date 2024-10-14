@@ -1,40 +1,30 @@
 <?php
-require '../../PHPMailer/src/Exception.php';
-require '../../PHPMailer/src/PHPMailer.php';
-require '../../PHPMailer/src/SMTP.php';
-
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
-
 function sendConfirmationEmail($email, $username) {
-    $mail = new PHPMailer(true);
+    // Cabeçalhos do email
+    $to = $email;  // Destinatário
+    $subject = 'Confirmação de Cadastro';  // Assunto do email
+    $headers = "MIME-Version: 1.0" . "\r\n";
+    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+    $headers .= "From: Link Manager <webmaster@rajo.com.br>" . "\r\n";  // Cabeçalho "From"
 
-    try {
-        // Configurações do servidor SMTP
-        $mail->isSMTP();                                 // Definir para usar SMTP
-        $mail->Host = 'mail.rajo.com.br';                // Defina o host SMTP
-        $mail->SMTPAuth = true;                          // Ativar autenticação SMTP
-        $mail->Username = 'webmaster@rajo.com.br';       // Insira seu email completo
-        $mail->Password = '@Rafa253325';                 // Insira sua senha de email
-        $mail->SMTPSecure = 'ssl';                       // Usar SSL para conexão segura
-        $mail->Port = 465;                               // Porta para SSL
+    // Corpo do email em HTML
+    $message = "
+    <html>
+    <head>
+        <title>Confirmação de Cadastro</title>
+    </head>
+    <body>
+        <p>Olá, $username</p>
+        <p>Obrigado por se registrar! Por favor, confirme seu email clicando no link abaixo:</p>
+        <p><a href='http://projetos.rajo.com.br/atletica/confirm.php?email=$email'>Confirmar Email</a></p>
+    </body>
+    </html>";
 
-        // Definindo o remetente e destinatário
-        $mail->setFrom('webmaster@rajo.com.br', 'Link Manager');   // Definir o remetente
-        $mail->addAddress($email);                                // Adicionar o destinatário
-
-        // Configurar o conteúdo do email
-        $mail->isHTML(true);                                       // Definir que o email será enviado em formato HTML
-        $mail->Subject = 'Confirmação de Cadastro';                // Assunto do email
-        $mail->Body    = "Olá $username, <br>Obrigado por se registrar! Por favor, confirme seu email clicando no link abaixo:<br><a href='http://seusite.com/confirm.php?email=$email'>Confirmar Email</a>";
-
-        // Enviar email
-        $mail->send();
-        return true;
-    } catch (Exception $e) {
-        // Exibir mensagem de erro, se houver
-        echo "Erro ao enviar email: {$mail->ErrorInfo}";
-        return false;
+    // Enviando o email
+    if (mail($to, $subject, $message, $headers)) {
+        return true;  // Email enviado com sucesso
+    } else {
+        return false;  // Falha no envio do email
     }
 }
 ?>
