@@ -1,16 +1,11 @@
 <?php
-// Ativar a exibição de todos os erros
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-?>
+// Incluindo os arquivos do PHPMailer, subindo dois níveis
+require '../../PHPMailer/src/Exception.php';
+require '../../PHPMailer/src/PHPMailer.php';
+require '../../PHPMailer/src/SMTP.php';
 
-<?php
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
-require 'path/to/PHPMailer/src/Exception.php';
-require 'path/to/PHPMailer/src/PHPMailer.php';
-require 'path/to/PHPMailer/src/SMTP.php';
 
 function sendConfirmationEmail($email, $username) {
     $mail = new PHPMailer(true);
@@ -32,11 +27,12 @@ function sendConfirmationEmail($email, $username) {
         // Conteúdo do email
         $mail->isHTML(true);
         $mail->Subject = 'Confirmação de Cadastro';
-        $mail->Body    = "Olá $username, <br>Obrigado por se registrar! Por favor, confirme seu email clicando no link abaixo:<br><a href='http://projetos.rajo.com.br/atletica/confirm.php?email=$email'>Confirmar Email</a>";
+        $mail->Body    = "Olá $username, <br>Obrigado por se registrar! Por favor, confirme seu email clicando no link abaixo:<br><a href='http://seusite.com/confirm.php?email=$email'>Confirmar Email</a>";
 
         $mail->send();
         return true;
     } catch (Exception $e) {
+        echo "Erro ao enviar email: {$mail->ErrorInfo}";
         return false;
     }
 }
