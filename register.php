@@ -2,6 +2,13 @@
 // Ativar a exibição de todos os erros
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
+
+
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+
 ?>
 
 <?php
@@ -43,7 +50,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "Erro ao cadastrar!";
         }
 
-        $stmt->close();
+
+// Certifique-se de que este código é chamado apenas uma vez para fechar o statement
+if (isset($stmt) && $stmt instanceof mysqli_stmt) {
+    $stmt->close();  // Fechar apenas uma vez
+}
+
+
     }
 
     $check_stmt->close();
