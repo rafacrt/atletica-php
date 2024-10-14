@@ -1,11 +1,25 @@
 <?php
 include 'includes/db.php';
+include 'includes/mail.php';
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+
+    // Validação de força da senha
+    if (!preg_match('/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/', $password)) {
+        echo "A senha deve ter pelo menos 8 caracteres, incluindo letras e números.";
+        exit();
+    }
+
+    // Verificar se as senhas correspondem
+    if ($password !== $confirm_password) {
+        echo "As senhas não correspondem.";
+        exit();
+    }
 
     // Verificar se o nome de usuário ou email já estão registrados
     $check_stmt = $conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
@@ -17,14 +31,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Nome de usuário ou email já em uso!";
     } else {
         // Inserir o novo usuário no banco de dados
+        $password_hash = password_hash($password, PASSWORD_BCRYPT);
         $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $username, $email, $password);
+        $stmt->bind_param("sss", $username, $email, $password_hash);
 
         if ($stmt->execute()) {
-            // Login automático após registro
-            $_SESSION['user_id'] = $stmt->insert_id; // Pega o ID do usuário recém-criado
-            header("Location: dashboard.php"); // Redireciona para o dashboard
-            exit();
+            // Enviar o email de confirmação
+            if (sendConfirmationEmail($email, $username)) {
+                // Login automático após registro
+                $_SESSION['user_id'] = $stmt->insert_id;
+                header("Location: dashboard.php");
+                exit();
+            } else {
+                echo "Erro ao enviar o email de confirmação!";
+            }
         } else {
             echo "Erro ao cadastrar!";
         }
@@ -45,6 +65,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <title>Registro</title>
+    <script>
+        // Validação de força da senha
+        function checkPasswordStrength() {
+            var password = document.getElementById("password").value;
+            var strength = document.getElementById("strength");
+
+            if (password.length < 8) {
+                strength.innerHTML = "A senha deve ter pelo menos 8 caracteres.";
+            } else {
+                var strongPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+                if (strongPassword.test(password)) {
+                    strength.innerHTML = "Senha forte.";
+                } else {
+                    strength.innerHTML = "A senha deve incluir letras e números.";
+                }
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -60,7 +98,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="form-group">
                 <label for="password">Senha</label>
-                <input type="password" name="password" class="form-control" required>
+                <input type="password" id="password" name="password" class="form-control" onkeyup="checkPasswordStrength()" required>
+                <small id="strength" class="text-muted"></small>
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Confirme a Senha</label>
+                <input type="password" name="confirm_password" class="form-control" required>
             </div>
             <button type="submit" class="btn btn-primary">Registrar</button>
         </form>
