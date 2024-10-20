@@ -18,7 +18,7 @@ session_start();
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
-            <a class="navbar-brand font-weight-bold" href="/index.php">
+            <a class="navbar-brand font-weight-bold" href="https://projetos.rajo.com.br/index.php">
                 Meu Sistema
             </a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,23 +28,23 @@ session_start();
                 <ul class="navbar-nav ml-auto">
                     <?php if (isset($_SESSION['username'])): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="/user/dashboard.php">
+                            <a class="nav-link" href="https://projetos.rajo.com.br/atletica/user/dashboard.php">
                                 <i class="fas fa-user"></i> Bem-vindo, <?= htmlspecialchars($_SESSION['username']); ?>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/user/logout.php">
+                            <a class="nav-link" href="https://projetos.rajo.com.br/atletica/user/logout.php">
                                 <i class="fas fa-sign-out-alt"></i> Sair
                             </a>
                         </li>
                     <?php else: ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="/user/login.php">
+                            <a class="nav-link" href="https://projetos.rajo.com.br/atletica/user/login.php">
                                 <i class="fas fa-sign-in-alt"></i> Login
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/user/register.php">
+                            <a class="nav-link" href="https://projetos.rajo.com.br/atletica/user/register.php">
                                 <i class="fas fa-user-plus"></i> Cadastre-se
                             </a>
                         </li>
