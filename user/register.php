@@ -16,40 +16,52 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif ($password !== $confirm_password) {
         $errors[] = "As senhas não coincidem.";
     } else {
-        // Verificar se o email já está registrado
-        $stmt = $conn->prepare("SELECT id FROM users WHERE email = :email OR username = :username");
-        $stmt->execute(['email' => $email, 'username' => $username]);
-        if ($stmt->rowCount() > 0) {
-            $errors[] = "O nome de usuário ou email já estão registrados.";
+        // Verificação da força da senha
+        if (strlen($password) < 8 || !preg_match('/[A-Z]/', $password) || !preg_match('/[a-z]/', $password) || !preg_match('/[0-9]/', $password) || !preg_match('/[\W]/', $password)) {
+            $errors[] = "A senha deve ter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas, números e símbolos.";
         } else {
-            // Gerar código de ativação e hash da senha
-            $activation_code = md5(rand());
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            // Verificar se o email ou nome de usuário já estão registrados
+            $stmt = $conn->prepare("SELECT id FROM users WHERE email = :email OR username = :username");
+            $stmt->execute(['email' => $email, 'username' => $username]);
 
-            // Inserir novo usuário no banco de dados
-            $stmt = $conn->prepare("INSERT INTO users (username, email, password, activation_code) VALUES (:username, :email, :password, :activation_code)");
-            $stmt->execute([
-                'username' => $username,
-                'email' => $email,
-                'password' => $hashed_password,
-                'activation_code' => $activation_code
-            ]);
-
-            // Enviar email de ativação usando mail()
-            $subject = "Confirme sua conta";
-            $message = "Olá $username,\n\n";
-            $message .= "Por favor, clique no link abaixo para ativar sua conta:\n\n";
-            $message .= "https://projetos.rajo.com.br/atletica/user/activate.php?code=$activation_code\n\n";
-            $message .= "Obrigado!";
-            $headers = "From: no-reply@meusite.com\r\n";
-            $headers .= "Reply-To: no-reply@meusite.com\r\n";
-            $headers .= "X-Mailer: PHP/" . phpversion();
-
-            if (mail($email, $subject, $message, $headers)) {
-                $success = "Um email de confirmação foi enviado. Por favor, verifique sua caixa de entrada.";
+            if ($stmt->rowCount() > 0) {
+                $existing_user = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($existing_user['email'] == $email) {
+                    $errors[] = "O email já está registrado. Tente usar outro.";
+                }
+                if ($existing_user['username'] == $username) {
+                    $errors[] = "O nome de usuário já está registrado. Tente usar outro.";
+                }
             } else {
-                error_log("Falha no envio de email para: $email");
-                $errors[] = "Ocorreu um erro ao enviar o email de confirmação. Verifique se o servidor suporta o envio de emails.";
+                // Gerar código de ativação e hash da senha
+                $activation_code = md5(rand());
+                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
+                // Inserir novo usuário no banco de dados
+                $stmt = $conn->prepare("INSERT INTO users (username, email, password, activation_code) VALUES (:username, :email, :password, :activation_code)");
+                $stmt->execute([
+                    'username' => $username,
+                    'email' => $email,
+                    'password' => $hashed_password,
+                    'activation_code' => $activation_code
+                ]);
+
+                // Enviar email de ativação
+                $subject = "Confirme sua conta";
+                $message = "Olá $username,\n\n";
+                $message .= "Por favor, clique no link abaixo para ativar sua conta:\n\n";
+                $message .= "http://localhost/user/activate.php?code=$activation_code\n\n";
+                $message .= "Obrigado!";
+                $headers = "From: no-reply@meusite.com\r\n";
+                $headers .= "Reply-To: no-reply@meusite.com\r\n";
+                $headers .= "X-Mailer: PHP/" . phpversion();
+
+                if (mail($email, $subject, $message, $headers)) {
+                    $success = "Um email de confirmação foi enviado. Por favor, verifique sua caixa de entrada.";
+                } else {
+                    error_log("Falha no envio de email para: $email");
+                    $errors[] = "Ocorreu um erro ao enviar o email de confirmação. Verifique se o servidor suporta o envio de emails.";
+                }
             }
         }
     }
@@ -87,11 +99,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="form-group">
                 <label for="password">Senha</label>
                 <input type="password" name="password" id="password" class="form-control" required>
+                <small id="strengthMessage" class="form-text"></small>
             </div>
             <div class="form-group">
                 <label for="confirm_password">Confirme sua Senha</label>
                 <input type="password" name="confirm_password" id="confirm_password" class="form-control" required>
             </div>
+
             <button type="submit" class="btn btn-primary">Cadastrar</button>
         </form>
     <?php endif; ?>
