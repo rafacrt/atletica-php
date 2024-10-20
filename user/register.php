@@ -5,10 +5,11 @@ $errors = [];
 $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = trim($_POST['username']);
-    $email = trim($_POST['email']);
-    $password = trim($_POST['password']);
-    $confirm_password = trim($_POST['confirm_password']);
+    // Verifique se os campos estão definidos no POST
+    $username = isset($_POST['username']) ? trim($_POST['username']) : '';
+    $email = isset($_POST['email']) ? trim($_POST['email']) : '';
+    $password = isset($_POST['password']) ? trim($_POST['password']) : '';
+    $confirm_password = isset($_POST['confirm_password']) ? trim($_POST['confirm_password']) : '';
 
     // Validação básica
     if (empty($username) || empty($email) || empty($password) || empty($confirm_password)) {
@@ -56,10 +57,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $headers .= "Reply-To: no-reply@projetos.rajo.com.br\r\n";
                 $headers .= "X-Mailer: PHP/" . phpversion();
 
-                // Diagnóstico básico de envio de email
+                // Diagnóstico de envio de email
                 if (mail($email, $subject, $message, $headers)) {
                     // Redireciona o usuário para a página inicial com uma mensagem de sucesso
-                    header("Location: /index.php?success=1");
+                    header("Location: https://projetos.rajo.com.br/atletica/index.php?success=1");
                     exit();
                 } else {
                     error_log("Falha no envio de email para: $email");
@@ -71,9 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-
 <?php include '../includes/header.php'; ?>
-
 
 <div class="container mt-5">
     <h2>Cadastre-se</h2>
