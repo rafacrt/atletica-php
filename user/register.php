@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $subject = "Confirme sua conta";
                 $message = "Olá $username,\n\n";
                 $message .= "Por favor, clique no link abaixo para ativar sua conta:\n\n";
-                $message .= "http://localhost/user/activate.php?code=$activation_code\n\n";
+                $message .= "https://projetos.rajo.com.br/atletica/user/activate.php?code=$activation_code\n\n";
                 $message .= "Obrigado!";
                 $headers = "From: no-reply@meusite.com\r\n";
                 $headers .= "Reply-To: no-reply@meusite.com\r\n";
@@ -90,25 +90,99 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <form action="register.php" method="POST">
             <div class="form-group">
                 <label for="username">Nome de Usuário</label>
-                <input type="text" name="username" id="username" class="form-control" required>
+                <input type="text" name="username" id="username" class="form-control form-control-lg" required>
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" name="email" id="email" class="form-control" required>
+                <input type="email" name="email" id="email" class="form-control form-control-lg" required>
             </div>
             <div class="form-group">
                 <label for="password">Senha</label>
-                <input type="password" name="password" id="password" class="form-control" required>
+                <input type="password" name="password" id="password" class="form-control form-control-lg" required>
                 <small id="strengthMessage" class="form-text"></small>
             </div>
             <div class="form-group">
                 <label for="confirm_password">Confirme sua Senha</label>
-                <input type="password" name="confirm_password" id="confirm_password" class="form-control" required>
+                <input type="password" name="confirm_password" id="confirm_password" class="form-control form-control-lg" required>
             </div>
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Cadastrar</button>
 
-            <button type="submit" class="btn btn-primary">Cadastrar</button>
         </form>
     <?php endif; ?>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const passwordInput = document.getElementById('password');
+        const strengthMessage = document.getElementById('strengthMessage');
+
+        passwordInput.addEventListener('input', function() {
+            const password = passwordInput.value;
+            let strength = 0;
+
+            if (password.length >= 8) strength += 1;
+            if (/[A-Z]/.test(password)) strength += 1;
+            if (/[a-z]/.test(password)) strength += 1;
+            if (/[0-9]/.test(password)) strength += 1;
+            if (/[\W]/.test(password)) strength += 1;
+
+            switch (strength) {
+                case 1:
+                case 2:
+                    strengthMessage.textContent = 'Senha Fraca';
+                    strengthMessage.style.color = 'red';
+                    break;
+                case 3:
+                    strengthMessage.textContent = 'Senha Média';
+                    strengthMessage.style.color = 'orange';
+                    break;
+                case 4:
+                case 5:
+                    strengthMessage.textContent = 'Senha Forte';
+                    strengthMessage.style.color = 'green';
+                    break;
+                default:
+                    strengthMessage.textContent = '';
+            }
+        });
+    });
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const passwordInput = document.getElementById('password');
+        const strengthMessage = document.getElementById('strengthMessage');
+
+        passwordInput.addEventListener('input', function() {
+            const password = passwordInput.value;
+            let strength = 0;
+
+            if (password.length >= 8) strength += 1;
+            if (/[A-Z]/.test(password)) strength += 1;
+            if (/[a-z]/.test(password)) strength += 1;
+            if (/[0-9]/.test(password)) strength += 1;
+            if (/[\W]/.test(password)) strength += 1;
+
+            switch (strength) {
+                case 1:
+                case 2:
+                    strengthMessage.textContent = 'Senha Fraca';
+                    strengthMessage.style.color = 'red';
+                    break;
+                case 3:
+                    strengthMessage.textContent = 'Senha Média';
+                    strengthMessage.style.color = 'orange';
+                    break;
+                case 4:
+                case 5:
+                    strengthMessage.textContent = 'Senha Forte';
+                    strengthMessage.style.color = 'green';
+                    break;
+                default:
+                    strengthMessage.textContent = '';
+            }
+        });
+    });
+</script>
+
 
 <?php include '../includes/footer.php'; ?>
