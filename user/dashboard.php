@@ -68,10 +68,4 @@ $links = $stmt_links->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 </div>
-
-<!-- Footer -->
-<footer class="main-footer">
-    <strong>&copy; 2024 Meu Sistema.</strong> Todos os direitos reservados.
-</footer>
-
 <?php include '../includes/footer.php'; ?>
