@@ -56,9 +56,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $headers .= "Reply-To: no-reply@projetos.rajo.com.br\r\n";
                 $headers .= "X-Mailer: PHP/" . phpversion();
 
+                // Diagnóstico básico de envio de email
                 if (mail($email, $subject, $message, $headers)) {
-                    // Exibe mensagem de sucesso e redireciona o usuário
-                    $success = "Cadastro realizado com sucesso. Por favor, verifique seu email para ativar sua conta.";
+                    // Redireciona o usuário para a página inicial com uma mensagem de sucesso
                     header("Location: /index.php?success=1");
                     exit();
                 } else {
@@ -70,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
+
 
 <?php include '../includes/header.php'; ?>
 
