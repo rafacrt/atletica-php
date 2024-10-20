@@ -52,12 +52,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $message .= "Por favor, clique no link abaixo para ativar sua conta:\n\n";
                 $message .= "https://projetos.rajo.com.br/atletica/user/activate.php?code=$activation_code\n\n";
                 $message .= "Obrigado!";
-                $headers = "From: no-reply@meusite.com\r\n";
-                $headers .= "Reply-To: no-reply@meusite.com\r\n";
+                $headers = "From: Meu Sistema <no-reply@projetos.rajo.com.br>\r\n";
+                $headers .= "Reply-To: no-reply@projetos.rajo.com.br\r\n";
                 $headers .= "X-Mailer: PHP/" . phpversion();
 
                 if (mail($email, $subject, $message, $headers)) {
-                    $success = "Um email de confirmação foi enviado. Por favor, verifique sua caixa de entrada.";
+                    // Exibe mensagem de sucesso e redireciona o usuário
+                    $success = "Cadastro realizado com sucesso. Por favor, verifique seu email para ativar sua conta.";
+                    header("Location: /index.php?success=1");
+                    exit();
                 } else {
                     error_log("Falha no envio de email para: $email");
                     $errors[] = "Ocorreu um erro ao enviar o email de confirmação. Verifique se o servidor suporta o envio de emails.";
@@ -69,6 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 
 <?php include '../includes/header.php'; ?>
+
 
 <div class="container mt-5">
     <h2>Cadastre-se</h2>
@@ -106,7 +110,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <input type="password" name="confirm_password" id="confirm_password" class="form-control form-control-lg" required>
             </div>
             <button type="submit" class="btn btn-primary btn-lg btn-block">Cadastrar</button>
-
         </form>
     <?php endif; ?>
 </div>
@@ -147,42 +150,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         });
     });
 </script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const passwordInput = document.getElementById('password');
-        const strengthMessage = document.getElementById('strengthMessage');
-
-        passwordInput.addEventListener('input', function() {
-            const password = passwordInput.value;
-            let strength = 0;
-
-            if (password.length >= 8) strength += 1;
-            if (/[A-Z]/.test(password)) strength += 1;
-            if (/[a-z]/.test(password)) strength += 1;
-            if (/[0-9]/.test(password)) strength += 1;
-            if (/[\W]/.test(password)) strength += 1;
-
-            switch (strength) {
-                case 1:
-                case 2:
-                    strengthMessage.textContent = 'Senha Fraca';
-                    strengthMessage.style.color = 'red';
-                    break;
-                case 3:
-                    strengthMessage.textContent = 'Senha Média';
-                    strengthMessage.style.color = 'orange';
-                    break;
-                case 4:
-                case 5:
-                    strengthMessage.textContent = 'Senha Forte';
-                    strengthMessage.style.color = 'green';
-                    break;
-                default:
-                    strengthMessage.textContent = '';
-            }
-        });
-    });
-</script>
-
 
 <?php include '../includes/footer.php'; ?>
