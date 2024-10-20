@@ -1,6 +1,5 @@
 <?php
 require '../includes/db_connect.php';
-require '../../PHPMailer/PHPMailerAutoload.php';  // PHPMailer está dois níveis acima
 
 $errors = [];
 $success = '';
@@ -36,23 +35,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 'activation_code' => $activation_code
             ]);
 
-            // Enviar email de ativação
-            $mail = new PHPMailer();
-            $mail->isSMTP();
-            $mail->Host = 'smtp.example.com';  // Insira o host SMTP
-            $mail->SMTPAuth = true;
-            $mail->Username = 'seu-email@example.com';  // Insira o email SMTP
-            $mail->Password = 'sua-senha';  // Senha do email
-            $mail->SMTPSecure = 'tls';
-            $mail->Port = 587;
+            // Enviar email de ativação usando mail()
+            $subject = "Confirme sua conta";
+            $message = "Olá $username,\n\n";
+            $message .= "Por favor, clique no link abaixo para ativar sua conta:\n\n";
+            $message .= "http://localhost/user/activate.php?code=$activation_code\n\n";
+            $message .= "Obrigado!";
+            $headers = "From: no-reply@meusite.com\r\n";
+            $headers .= "Reply-To: no-reply@meusite.com\r\n";
+            $headers .= "X-Mailer: PHP/" . phpversion();
 
-            $mail->setFrom('seu-email@example.com', 'Meu Sistema');
-            $mail->addAddress($email);
-            $mail->isHTML(true);
-            $mail->Subject = 'Confirme sua conta';
-            $mail->Body = "Olá $username,<br><br>Por favor, clique no link abaixo para ativar sua conta:<br><br><a href='http://localhost/user/activate.php?code=$activation_code'>Ativar Conta</a>";
-
-            if ($mail->send()) {
+            if (mail($email, $subject, $message, $headers)) {
                 $success = "Um email de confirmação foi enviado. Por favor, verifique sua caixa de entrada.";
             } else {
                 $errors[] = "Ocorreu um erro ao enviar o email de confirmação.";
