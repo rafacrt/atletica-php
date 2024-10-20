@@ -32,10 +32,10 @@ $links = $stmt_links->fetchAll(PDO::FETCH_ASSOC);
                             <?php if (!empty($user['profile_image'])): ?>
                                 <img src="../assets/img/<?= htmlspecialchars($user['profile_image']); ?>" alt="Foto de Perfil" class="img-thumbnail rounded-circle" width="150">
                             <?php else: ?>
-                                <img src="../assets/img/default_profile.png" alt="Foto de Perfil Padrão" class="img-thumbnail rounded-circle" width="150">
+                                <img src="../assets/img/default_profile_icon.png" alt="Ícone de Perfil Padrão" class="img-thumbnail rounded-circle" width="150">
                             <?php endif; ?>
                             <a href="profile.php" class="btn btn-primary mt-3">Editar Perfil</a>
-                            <a href="../public_profile.php?username=<?= htmlspecialchars($user['username']); ?>" class="btn btn-success mt-3">Ver Perfil</a>
+                            <a href="/atletica/<?= htmlspecialchars($user['username']); ?>" class="btn btn-success mt-3">Ver Perfil</a>
                         </div>
                     </div>
                 </div>
