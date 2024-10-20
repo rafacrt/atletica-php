@@ -10,6 +10,11 @@ session_start();
     <title>Meu Sistema</title>
     <link rel="stylesheet" href="/assets/css/style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: <?= isset($_SESSION['theme_color']) ? $_SESSION['theme_color'] : '#FFFFFF'; ?>;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">

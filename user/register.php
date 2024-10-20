@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $subject = "Confirme sua conta";
             $message = "Olá $username,\n\n";
             $message .= "Por favor, clique no link abaixo para ativar sua conta:\n\n";
-            $message .= "http://localhost/user/activate.php?code=$activation_code\n\n";
+            $message .= "https://projetos.rajo.com.br/atletica/user/activate.php?code=$activation_code\n\n";
             $message .= "Obrigado!";
             $headers = "From: no-reply@meusite.com\r\n";
             $headers .= "Reply-To: no-reply@meusite.com\r\n";
@@ -48,7 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if (mail($email, $subject, $message, $headers)) {
                 $success = "Um email de confirmação foi enviado. Por favor, verifique sua caixa de entrada.";
             } else {
-                $errors[] = "Ocorreu um erro ao enviar o email de confirmação.";
+                error_log("Falha no envio de email para: $email");
+                $errors[] = "Ocorreu um erro ao enviar o email de confirmação. Verifique se o servidor suporta o envio de emails.";
             }
         }
     }
