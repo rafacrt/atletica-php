@@ -26,11 +26,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (move_uploaded_file($_FILES["profile_image"]["tmp_name"], $profile_image)) {
         $stmt = $conn->prepare("UPDATE users SET profile_image = :profile_image WHERE id = :id");
         $stmt->execute(['profile_image' => $profile_image, 'id' => $user['id']]);
+        $success = "Foto de perfil atualizada com sucesso!";
     }
 
     if (move_uploaded_file($_FILES["cover_image"]["tmp_name"], $cover_image)) {
         $stmt = $conn->prepare("UPDATE users SET cover_image = :cover_image WHERE id = :id");
-        $stmt->execute(['cover_image' => $cover_image, 'id' => $user['id']]);
+        $stmt->execute(['cover_image' => $cover_image]);
+        $success = "Foto de capa atualizada com sucesso!";
     }
 }
 
@@ -39,22 +41,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <?php include '../includes/header.php'; ?>
 
 <div class="container mt-5">
-    <h2>Editar Perfil</h2>
+    <h2 class="text-center">Editar Perfil</h2>
 
     <?php if (!empty($success)): ?>
-        <div class="alert alert-success">
+        <div class="alert alert-success text-center shadow-sm rounded p-4">
             <?= $success; ?>
         </div>
     <?php endif; ?>
 
-    <form action="profile.php" method="POST">
+    <form action="profile.php" method="POST" enctype="multipart/form-data" class="shadow-sm p-4 bg-white rounded">
         <div class="form-group">
             <label for="full_name">Nome Completo</label>
-            <input type="text" name="full_name" id="full_name" class="form-control" value="<?= htmlspecialchars($user['full_name']); ?>">
+            <input type="text" name="full_name" id="full_name" class="form-control form-control-lg" value="<?= htmlspecialchars($user['full_name']); ?>">
         </div>
         <div class="form-group">
             <label for="bio">Biografia</label>
-            <textarea name="bio" id="bio" class="form-control"><?= htmlspecialchars($user['bio']); ?></textarea>
+            <textarea name="bio" id="bio" class="form-control form-control-lg"><?= htmlspecialchars($user['bio']); ?></textarea>
         </div>
         <div class="form-group">
             <label for="theme_color">Cor do Tema</label>
@@ -62,14 +64,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
         <div class="form-group">
             <label for="profile_image">Foto de Perfil</label>
-            <input type="file" name="profile_image" id="profile_image" class="form-control">
+            <input type="file" name="profile_image" id="profile_image" class="form-control form-control-lg">
         </div>
         <div class="form-group">
             <label for="cover_image">Foto de Capa</label>
-            <input type="file" name="cover_image" id="cover_image" class="form-control">
+            <input type="file" name="cover_image" id="cover_image" class="form-control form-control-lg">
         </div>
 
-        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+        <button type="submit" class="btn btn-primary btn-lg btn-block">Salvar Alterações</button>
     </form>
 </div>
 

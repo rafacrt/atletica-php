@@ -28,12 +28,14 @@ if (isset($_GET['code'])) {
 
 <div class="container mt-5">
     <?php if ($activation_success): ?>
-        <div class="alert alert-success">
-            Sua conta foi ativada com sucesso! Você pode <a href="login.php">fazer login</a>.
+        <div class="alert alert-success text-center shadow-sm rounded p-4">
+            <h4 class="font-weight-bold">Conta Ativada com Sucesso!</h4>
+            <p>Sua conta foi ativada. Agora você pode <a href="login.php" class="text-primary font-weight-bold">fazer login</a>.</p>
         </div>
     <?php else: ?>
-        <div class="alert alert-danger">
-            <?= $error_message; ?>
+        <div class="alert alert-danger text-center shadow-sm rounded p-4">
+            <h4 class="font-weight-bold">Erro na Ativação</h4>
+            <p><?= $error_message; ?></p>
         </div>
     <?php endif; ?>
 </div>

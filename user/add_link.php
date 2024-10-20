@@ -38,29 +38,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <?php include '../includes/header.php'; ?>
 
 <div class="container mt-5">
-    <h2>Adicionar Novo Link</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center">Adicionar Novo Link</h2>
 
-    <?php if (!empty($errors)): ?>
-        <div class="alert alert-danger">
-            <ul>
-                <?php foreach ($errors as $error): ?>
-                    <li><?= $error; ?></li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-    <?php endif; ?>
+            <?php if (!empty($errors)): ?>
+                <div class="alert alert-danger text-center shadow-sm rounded p-3">
+                    <ul class="list-unstyled">
+                        <?php foreach ($errors as $error): ?>
+                            <li><?= $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
 
-    <form action="add_link.php" method="POST">
-        <div class="form-group">
-            <label for="title">Título do Link</label>
-            <input type="text" name="title" id="title" class="form-control" required>
+            <form action="add_link.php" method="POST" class="shadow-sm p-4 bg-white rounded">
+                <div class="form-group">
+                    <label for="title">Título do Link</label>
+                    <input type="text" name="title" id="title" class="form-control form-control-lg" required>
+                </div>
+                <div class="form-group">
+                    <label for="url">URL</label>
+                    <input type="url" name="url" id="url" class="form-control form-control-lg" required>
+                </div>
+                <button type="submit" class="btn btn-success btn-lg btn-block">Adicionar Link</button>
+            </form>
         </div>
-        <div class="form-group">
-            <label for="url">URL</label>
-            <input type="url" name="url" id="url" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-success">Adicionar Link</button>
-    </form>
+    </div>
 </div>
 
 <?php include '../includes/footer.php'; ?>

@@ -27,28 +27,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <?php include '../includes/header.php'; ?>
 
 <div class="container mt-5">
-    <h2>Login</h2>
-    <?php if (!empty($errors)): ?>
-        <div class="alert alert-danger">
-            <ul>
-                <?php foreach ($errors as $error): ?>
-                    <li><?= $error; ?></li>
-                <?php endforeach; ?>
-            </ul>
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h2 class="text-center">Login</h2>
+            
+            <?php if (!empty($errors)): ?>
+                <div class="alert alert-danger text-center shadow-sm rounded p-3">
+                    <ul class="list-unstyled">
+                        <?php foreach ($errors as $error): ?>
+                            <li><?= $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
+            
+            <form action="login.php" method="POST" class="shadow-sm p-4 bg-white rounded">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" id="email" class="form-control form-control-lg" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <input type="password" name="password" id="password" class="form-control form-control-lg" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg btn-block">Login</button>
+                <div class="mt-3 text-center">
+                    <a href="register.php" class="text-primary">Não tem uma conta? Cadastre-se</a>
+                </div>
+            </form>
         </div>
-    <?php endif; ?>
-    
-    <form action="login.php" method="POST">
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" class="form-control" required>
-        </div>
-        <div class="form-group">
-            <label for="password">Senha</label>
-            <input type="password" name="password" id="password" class="form-control" required>
-        </div>
-        <button type="submit" class="btn btn-primary">Login</button>
-    </form>
+    </div>
 </div>
 
 <?php include '../includes/footer.php'; ?>

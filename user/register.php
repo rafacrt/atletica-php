@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <?php include '../includes/header.php'; ?>
 
 <div class="container mt-5">
-    <h2>Cadastre-se</h2>
+    <h2 class="text-center">Cadastre-se</h2>
     <?php if (!empty($errors)): ?>
         <div class="alert alert-danger">
             <ul>
@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?= $success; ?>
         </div>
     <?php else: ?>
-        <form action="register.php" method="POST">
+        <form action="register.php" method="POST" class="p-4 shadow rounded bg-white">
             <div class="form-group">
                 <label for="username">Nome de Usuário</label>
                 <input type="text" name="username" id="username" class="form-control form-control-lg" required>
@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="form-group">
                 <label for="password">Senha</label>
                 <input type="password" name="password" id="password" class="form-control form-control-lg" required>
-                <small id="strengthMessage" class="form-text"></small>
+                <small id="strengthMessage" class="form-text text-muted"></small>
             </div>
             <div class="form-group">
                 <label for="confirm_password">Confirme sua Senha</label>

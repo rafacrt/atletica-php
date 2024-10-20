@@ -1,0 +1,164 @@
+body {
+    background-color: #F5F5F7;
+    color: #333333;
+    font-family: 'San Francisco', 'Helvetica Neue', Arial, sans-serif;
+}
+
+.brand-link {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E5E5E5;
+    font-weight: bold;
+}
+
+.sidebar {
+    background-color: #FFFFFF;
+    color: #333333;
+}
+
+.sidebar a {
+    color: #0071E3;
+}
+
+.sidebar a:hover {
+    color: #005BB5;
+}
+
+.btn-primary {
+    background-color: #0071E3;
+    border-color: #0071E3;
+}
+
+.btn-primary:hover {
+    background-color: #005BB5;
+}
+
+.content-wrapper {
+    background-color: #FFFFFF;
+}
+
+.main-footer {
+    background-color: #FFFFFF;
+    border-top: 1px solid #E5E5E5;
+    color: #333333;
+}
+
+h1, h2, h3, h4, h5 {
+    color: #333333;
+}
+
+.card {
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.navbar {
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #E5E5E5;
+}
+
+.footer {
+    background-color: #FFFFFF;
+    border-top: 1px solid #E5E5E5;
+    color: #333333;
+}
+
+a.nav-link {
+    color: #0071E3;
+}
+
+a.nav-link:hover {
+    color: #005BB5;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #333333;
+}
+
+.navbar-brand:hover {
+    color: #005BB5;
+}
+.alert {
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.alert-success {
+    background-color: #E5F9E7;
+    color: #2E7D32;
+}
+
+.alert-danger {
+    background-color: #FDECEA;
+    color: #D32F2F;
+}
+
+a.text-primary {
+    color: #0071E3;
+}
+
+a.text-primary:hover {
+    color: #005BB5;
+}
+
+h4 {
+    color: #333;
+}
+.form-control {
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 16px;
+}
+
+.btn-primary {
+    background-color: #0071E3;
+    border-color: #0071E3;
+}
+
+.btn-primary:hover {
+    background-color: #005BB5;
+}
+
+.alert {
+    border-radius: 12px;
+    padding: 20px;
+}
+
+a.text-primary {
+    color: #0071E3;
+}
+
+a.text-primary:hover {
+    color: #005BB5;
+}
+
+.btn-primary {
+    background-color: #0071E3;
+    border-color: #0071E3;
+}
+
+.btn-primary:hover {
+    background-color: #005BB5;
+}
+
+.btn-success {
+    background-color: #5AC8FA;
+    border-color: #5AC8FA;
+}
+
+.img-thumbnail {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+}
+
+.list-group-item {
+    border: none;
+    padding: 10px;
+}
+
+.main-footer {
+    background-color: #FFFFFF;
+    border-top: 1px solid #E5E5E5;
+    color: #333333;
+}
