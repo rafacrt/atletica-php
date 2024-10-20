@@ -1,5 +1,5 @@
 <!-- Footer -->
-<footer class="bg-white text-center text-lg-start mt-auto border-top">
+<footer style="margin-top: 150px;" class="bg-white text-center text-lg-start mt-auto border-top">
     <div class="container p-4">
         <p class="text-muted">&copy; 2024 Meu Sistema. Todos os direitos reservados.</p>
     </div>

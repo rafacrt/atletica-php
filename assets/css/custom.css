@@ -162,3 +162,38 @@ a.text-primary:hover {
     border-top: 1px solid #E5E5E5;
     color: #333333;
 }
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #FFFFFF;
+    border-radius: 15px;
+    padding: 30px;
+}
+
+.img-thumbnail {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+}
+
+.list-group-item {
+    border: none;
+    background-color: #0071E3;
+    color: #fff;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.list-group-item a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+.list-group-item a:hover {
+    color: #f1f1f1;
+}
+
+h2 {
+    color: #333333;
+}
