@@ -12,10 +12,40 @@ $stmt = $conn->prepare("SELECT * FROM users WHERE username = :username");
 $stmt->execute(['username' => $_SESSION['username']]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Recupera os links do usuário
-$stmt_links = $conn->prepare("SELECT * FROM links WHERE user_id = :user_id ORDER BY position ASC");
-$stmt_links->execute(['user_id' => $user['id']]);
-$links = $stmt_links->fetchAll(PDO::FETCH_ASSOC);
+// Recupera os badges do usuário
+$stmt_badges = $conn->prepare("SELECT * FROM badges WHERE user_id = :user_id");
+$stmt_badges->execute(['user_id' => $user['id']]);
+$badges = $stmt_badges->fetchAll(PDO::FETCH_ASSOC);
+
+// Salvando os badges selecionados
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    for ($i = 1; $i <= 4; $i++) {
+        $badge_title = $_POST["badge_title_$i"];
+        $badge_icon = $_POST["badge_icon_$i"];
+
+        // Verifica se já existe um badge no banco de dados
+        if (isset($badges[$i - 1])) {
+            // Atualiza o badge existente
+            $stmt = $conn->prepare("UPDATE badges SET title = :title, icon = :icon WHERE id = :id");
+            $stmt->execute([
+                'title' => $badge_title,
+                'icon' => $badge_icon,
+                'id' => $badges[$i - 1]['id']
+            ]);
+        } else {
+            // Insere um novo badge
+            $stmt = $conn->prepare("INSERT INTO badges (user_id, title, icon) VALUES (:user_id, :title, :icon)");
+            $stmt->execute([
+                'user_id' => $user['id'],
+                'title' => $badge_title,
+                'icon' => $badge_icon
+            ]);
+        }
+    }
+    
+    header("Location: dashboard.php");
+    exit();
+}
 ?>
 
 <?php include '../includes/header.php'; ?>
@@ -27,7 +57,6 @@ $links = $stmt_links->fetchAll(PDO::FETCH_ASSOC);
             <div class="card shadow-sm">
                 <div class="card-body text-center">
                     <h5 class="card-title">Perfil</h5>
-                    <!-- Foto de perfil circular -->
                     <?php if (!empty($user['profile_image'])): ?>
                         <img src="../assets/img/<?= htmlspecialchars($user['profile_image']); ?>" alt="Foto de Perfil" class="img-thumbnail rounded-circle" width="150">
                     <?php else: ?>
@@ -40,28 +69,26 @@ $links = $stmt_links->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </div>
 
-        <!-- Seção de Links -->
+        <!-- Seção de Badges -->
         <div class="col-md-8">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title">Seus Links</h5>
-                    <a href="add_link.php" class="btn btn-primary mb-3">Adicionar Novo Link</a>
-
-                    <?php if (count($links) > 0): ?>
-                        <ul class="list-group">
-                            <?php foreach ($links as $link): ?>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span><?= htmlspecialchars($link['title']); ?> - <a href="<?= htmlspecialchars($link['url']); ?>" target="_blank"><?= htmlspecialchars($link['url']); ?></a></span>
-                                    <span>
-                                        <a href="edit_link.php?id=<?= $link['id']; ?>" class="btn btn-sm btn-warning">Editar</a>
-                                        <a href="delete_link.php?id=<?= $link['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir este link?');">Excluir</a>
-                                    </span>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    <?php else: ?>
-                        <p>Você ainda não adicionou nenhum link.</p>
-                    <?php endif; ?>
+                    <h5 class="card-title">Escolha seus Badges</h5>
+                    <form action="dashboard.php" method="POST">
+                        <?php for ($i = 1; $i <= 4; $i++): ?>
+                            <div class="form-group">
+                                <label for="badge_title_<?= $i ?>">Título do Badge <?= $i ?></label>
+                                <input type="text" name="badge_title_<?= $i ?>" class="form-control" value="<?= isset($badges[$i - 1]) ? htmlspecialchars($badges[$i - 1]['title']) : ''; ?>" placeholder="Título do Badge <?= $i ?>">
+                                <label for="badge_icon_<?= $i ?>">Ícone do Badge <?= $i ?></label>
+                                <select name="badge_icon_<?= $i ?>" class="form-control">
+                                    <option value="fa-star" <?= isset($badges[$i - 1]) && $badges[$i - 1]['icon'] == 'fa-star' ? 'selected' : ''; ?>>Estrela</option>
+                                    <option value="fa-heart" <?= isset($badges[$i - 1]) && $badges[$i - 1]['icon'] == 'fa-heart' ? 'selected' : ''; ?>>Coração</option>
+                                    <!-- Adicione outros ícones conforme necessário -->
+                                </select>
+                            </div>
+                        <?php endfor; ?>
+                        <button type="submit" class="btn btn-primary">Salvar Badges</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -69,6 +96,7 @@ $links = $stmt_links->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <?php include '../includes/footer.php'; ?>
+
 
 <!-- Custom CSS -->
 <style>
