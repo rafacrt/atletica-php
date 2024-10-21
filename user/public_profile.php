@@ -32,7 +32,11 @@ if (isset($_GET['username'])) {
 <div class="container text-center mt-5">
     <h2><?= htmlspecialchars($user['username']); ?></h2>
 
-    
+    <?php if (!empty($user['profile_image'])): ?>
+        <img src="../assets/img/<?= htmlspecialchars($user['profile_image']); ?>" alt="Foto de Perfil" class="img-thumbnail rounded-circle" width="150">
+    <?php else: ?>
+        <img src="../assets/img/default_profile.png" alt="Foto de Perfil Padrão" class="img-thumbnail rounded-circle" width="150">
+    <?php endif; ?>
     
     <div class="mt-4">
         <?php if (count($links) > 0): ?>
