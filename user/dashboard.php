@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             ]);
         }
     }
-    
+
     header("Location: dashboard.php");
     exit();
 }
@@ -90,7 +90,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                         <label for="badge_icon_<?= $i ?>">Ícone do Badge <?= $i ?></label>
                                         <div class="icon-picker">
                                             <?php
-                                            $icons = ['fa-star', 'fa-heart', 'fa-check', 'fa-cog']; // Adicione mais ícones conforme necessário
+                                            $icons = [
+                                                'fa-star',
+                                                'fa-heart',
+                                                'fa-check',
+                                                'fa-cog',
+                                                'fa-user',
+                                                'fa-car',
+                                                'fa-home',
+                                                'fa-lock',
+                                                'fa-key',
+                                                'fa-phone',
+                                                'fa-envelope',
+                                                'fa-bell',
+                                                'fa-camera',
+                                                'fa-coffee',
+                                                'fa-comment',
+                                                'fa-compass',
+                                                'fa-download',
+                                                'fa-edit',
+                                                'fa-globe',
+                                                'fa-graduation-cap',
+                                                'fa-hammer',
+                                                'fa-headphones',
+                                                'fa-laptop',
+                                                'fa-lightbulb',
+                                                'fa-map',
+                                                'fa-music',
+                                                'fa-paper-plane',
+                                                'fa-plane',
+                                                'fa-smile',
+                                                'fa-snowflake',
+                                                'fa-sun',
+                                                'fa-sync',
+                                                'fa-thumbs-up',
+                                                'fa-umbrella',
+                                                'fa-user-circle',
+                                                'fa-user-md',
+                                                'fa-users',
+                                                'fa-video',
+                                                'fa-wifi',
+                                                'fa-rocket'
+                                            ];
                                             foreach ($icons as $icon): ?>
                                                 <label class="icon-label">
                                                     <input type="radio" name="badge_icon_<?= $i ?>" value="<?= $icon ?>" <?= isset($badges[$i - 1]) && $badges[$i - 1]['icon'] == $icon ? 'checked' : ''; ?>>
@@ -98,6 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                                 </label>
                                             <?php endforeach; ?>
                                         </div>
+
                                     </div>
                                 </div>
                             <?php endfor; ?>
@@ -147,31 +189,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         width: 150px;
         height: 150px;
         object-fit: cover;
-    }
-
-    /* Estilização para os ícones de seleção */
-    .icon-picker {
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-    }
-
-    .icon-label {
-        text-align: center;
-        cursor: pointer;
-    }
-
-    .icon-label input {
-        display: none;
-    }
-
-    .icon-label i {
-        color: #333;
-        transition: color 0.3s;
-    }
-
-    .icon-label input:checked + i {
-        color: #007bff;
     }
 
     /* Botões estilizados */
