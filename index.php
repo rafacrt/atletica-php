@@ -15,17 +15,20 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php foreach ($users as $user): ?>
             <div class="col-md-4 text-center mb-5">
                 <div class="user-card">
-                    <!-- Foto de perfil redonda -->
-                    <div class="profile-image-wrapper">
-                        <?php if (!empty($user['profile_image'])): ?>
-                            <img src="assets/img/<?= htmlspecialchars($user['profile_image']); ?>" alt="Foto de Perfil" class="profile-image img-fluid rounded-circle">
-                        <?php else: ?>
-                            <img src="assets/img/default_profile.png" alt="Foto de Perfil Padrão" class="profile-image img-fluid rounded-circle">
-                        <?php endif; ?>
-                    </div>
-                    <!-- Nome de usuário e nome completo -->
-                    <p class="username small mt-2"><?= htmlspecialchars($user['username']); ?></p>
-                    <p class="full-name h5"><?= htmlspecialchars($user['full_name']); ?></p>
+                    <!-- Link para o perfil do usuário -->
+                    <a href="/atletica/<?= htmlspecialchars($user['username']); ?>">
+                        <div class="profile-image-wrapper">
+                            <!-- Foto de perfil redonda -->
+                            <?php if (!empty($user['profile_image'])): ?>
+                                <img src="assets/img/<?= htmlspecialchars($user['profile_image']); ?>" alt="Foto de Perfil" class="profile-image img-fluid rounded-circle">
+                            <?php else: ?>
+                                <img src="assets/img/default_profile.png" alt="Foto de Perfil Padrão" class="profile-image img-fluid rounded-circle">
+                            <?php endif; ?>
+                        </div>
+                        <!-- Nome de usuário e nome completo -->
+                        <p class="username small mt-2"><?= htmlspecialchars($user['username']); ?></p>
+                        <p class="full-name h5"><?= htmlspecialchars($user['full_name']); ?></p>
+                    </a>
                 </div>
             </div>
         <?php endforeach; ?>

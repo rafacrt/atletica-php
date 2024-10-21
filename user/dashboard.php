@@ -35,7 +35,8 @@ $links = $stmt_links->fetchAll(PDO::FETCH_ASSOC);
                                 <img src="../assets/img/default_profile_icon.png" alt="Ícone de Perfil Padrão" class="img-thumbnail rounded-circle" width="150">
                             <?php endif; ?>
                             <a href="profile.php" class="btn btn-primary mt-3">Editar Perfil</a>
-                            <a href="/atletica/user/<?= htmlspecialchars($user['username']); ?>" class="btn btn-success mt-3">Ver Perfil</a>
+                            <!-- Alterado para redirecionar para o formato padrão com ?username -->
+                            <a href="/atletica/user/public_profile.php?username=<?= htmlspecialchars($user['username']); ?>" class="btn btn-success mt-3">Ver Perfil</a>
                         </div>
                     </div>
                 </div>
@@ -52,7 +53,7 @@ $links = $stmt_links->fetchAll(PDO::FETCH_ASSOC);
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             <span><?= htmlspecialchars($link['title']); ?> - <a href="<?= htmlspecialchars($link['url']); ?>" target="_blank"><?= htmlspecialchars($link['url']); ?></a></span>
                                             <span>
-                                                <a href="edit_link.php?id=<?= $link['id']; ?>" class="btn btn-sm btn-warning">Editar</a>
+                                            <a href="edit_link.php?id=<?= $link['id']; ?>" class="btn btn-sm btn-warning">Editar</a>
                                                 <a href="delete_link.php?id=<?= $link['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir este link?');">Excluir</a>
                                             </span>
                                         </li>
@@ -68,4 +69,5 @@ $links = $stmt_links->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 </div>
+
 <?php include '../includes/footer.php'; ?>
