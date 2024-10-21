@@ -26,24 +26,26 @@ $links = $stmt_links->fetchAll(PDO::FETCH_ASSOC);
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     for ($i = 1; $i <= 4; $i++) {
         $badge_title = $_POST["badge_title_$i"];
-        $badge_icon = $_POST["badge_icon_$i"];
+        $badge_icon = isset($_POST["badge_icon_$i"]) ? $_POST["badge_icon_$i"] : null; // Verifica se o ícone foi selecionado
 
-        if (isset($badges[$i - 1])) {
-            // Atualiza o badge existente
-            $stmt = $conn->prepare("UPDATE badges SET title = :title, icon = :icon WHERE id = :id");
-            $stmt->execute([
-                'title' => $badge_title,
-                'icon' => $badge_icon,
-                'id' => $badges[$i - 1]['id']
-            ]);
-        } else {
-            // Insere um novo badge
-            $stmt = $conn->prepare("INSERT INTO badges (user_id, title, icon) VALUES (:user_id, :title, :icon)");
-            $stmt->execute([
-                'user_id' => $user['id'],
-                'title' => $badge_title,
-                'icon' => $badge_icon
-            ]);
+        if (!empty($badge_title) && !empty($badge_icon)) {
+            if (isset($badges[$i - 1])) {
+                // Atualiza o badge existente
+                $stmt = $conn->prepare("UPDATE badges SET title = :title, icon = :icon WHERE id = :id");
+                $stmt->execute([
+                    'title' => $badge_title,
+                    'icon' => $badge_icon,
+                    'id' => $badges[$i - 1]['id']
+                ]);
+            } else {
+                // Insere um novo badge
+                $stmt = $conn->prepare("INSERT INTO badges (user_id, title, icon) VALUES (:user_id, :title, :icon)");
+                $stmt->execute([
+                    'user_id' => $user['id'],
+                    'title' => $badge_title,
+                    'icon' => $badge_icon
+                ]);
+            }
         }
     }
 
@@ -106,9 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Escolha seus Badges</h5>
-                    <button type="button" class="btn btn-secondary" id="toggleBadgeSelection">Selecionar Badges</button>
-
-                    <form action="dashboard.php" method="POST" id="badgeSelection" style="display: none;">
+                    <form action="dashboard.php" method="POST">
                         <div class="row">
                             <?php for ($i = 1; $i <= 4; $i++): ?>
                                 <div class="col-md-6 mb-4">
@@ -118,7 +118,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     </div>
                                     <div class="form-group">
                                         <label for="badge_icon_<?= $i ?>">Ícone do Badge <?= $i ?></label>
-                                        <div class="icon-picker">
+                                        <button type="button" class="btn btn-secondary toggle-icon-picker" data-target="#icon-picker-<?= $i ?>">Selecionar Ícone</button>
+                                        <div id="icon-picker-<?= $i ?>" class="icon-picker mt-3" style="display: none;">
                                             <?php
                                             $icons = [
                                                 'fa-star', 'fa-heart', 'fa-check', 'fa-cog', 'fa-user', 'fa-car', 'fa-home', 'fa-lock', 
@@ -200,14 +201,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 </style>
 
-<!-- JavaScript para mostrar/ocultar a seleção de badges -->
+<!-- JavaScript para mostrar/ocultar a seleção de badges individualmente -->
 <script>
-    document.getElementById('toggleBadgeSelection').addEventListener('click', function() {
-        const badgeSelection = document.getElementById('badgeSelection');
-        if (badgeSelection.style.display === 'none') {
-            badgeSelection.style.display = 'block';
-        } else {
-            badgeSelection.style.display = 'none';
-        }
+    document.querySelectorAll('.toggle-icon-picker').forEach(function(button) {
+        button.addEventListener('click', function() {
+            const target = document.querySelector(button.getAttribute('data-target'));
+            if (target.style.display === 'none') {
+                target.style.display = 'grid'; // Mostrar como grid
+            } else {
+                target.style.display = 'none'; // Esconder
+            }
+        });
     });
 </script>
+
