@@ -136,17 +136,17 @@ $social_links = $stmt_social->fetchAll(PDO::FETCH_ASSOC);
                         <div id="social-links-container">
                             <?php foreach ($social_links as $index => $social): ?>
                                 <div class="row social-link-item">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <input type="text" name="social_links[<?= $index ?>][network]" class="form-control" placeholder="Nome da Rede Social" value="<?= htmlspecialchars($social['network']); ?>">
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <input type="url" name="social_links[<?= $index ?>][url]" class="form-control" placeholder="Link do Perfil" value="<?= htmlspecialchars($social['url']); ?>">
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <button type="button" class="btn btn-secondary toggle-icon-picker" data-target="#icon-picker-<?= $index ?>">Selecionar Ícone</button>
                                         <div id="icon-picker-<?= $index ?>" class="icon-picker mt-3" style="display: none;">
                                             <?php
-                                            $icons = ['fa-facebook', 'fa-twitter', 'fa-instagram', 'fa-linkedin', 'fa-youtube', 'fa-github', 'fa-whatsapp']; // Adicione mais ícones aqui
+                                            $icons = ['fa-facebook', 'fa-twitter', 'fa-instagram', 'fa-linkedin', 'fa-youtube', 'fa-github', 'fa-whatsapp'];
                                             foreach ($icons as $icon): ?>
                                                 <label class="icon-label">
                                                     <input type="radio" name="social_links[<?= $index ?>][icon]" value="<?= $icon ?>" <?= ($social['icon'] == $icon) ? 'checked' : ''; ?>>
@@ -154,6 +154,10 @@ $social_links = $stmt_social->fetchAll(PDO::FETCH_ASSOC);
                                                 </label>
                                             <?php endforeach; ?>
                                         </div>
+                                    </div>
+                                    <!-- Botão de remover -->
+                                    <div class="col-md-3 text-right">
+                                        <button type="button" class="btn btn-danger remove-social-link">X</button>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -185,7 +189,7 @@ $social_links = $stmt_social->fetchAll(PDO::FETCH_ASSOC);
                                         <button type="button" class="btn btn-secondary toggle-icon-picker" data-target="#icon-picker-<?= $i ?>">Selecionar Ícone</button>
                                         <div id="icon-picker-<?= $i ?>" class="icon-picker mt-3" style="display: none;">
                                             <?php
-                                            $icons = ['fa-star', 'fa-heart', 'fa-check', 'fa-cog', 'fa-user', 'fa-car', 'fa-home']; // Ícones de badges
+                                            $icons = ['fa-star', 'fa-heart', 'fa-check', 'fa-cog', 'fa-user', 'fa-car', 'fa-home'];
                                             foreach ($icons as $icon): ?>
                                                 <label class="icon-label">
                                                     <input type="radio" name="badge_icon_<?= $i ?>" value="<?= $icon ?>" <?= isset($badges[$i - 1]) && $badges[$i - 1]['icon'] == $icon ? 'checked' : ''; ?>>
@@ -207,7 +211,7 @@ $social_links = $stmt_social->fetchAll(PDO::FETCH_ASSOC);
 
 <?php include '../includes/footer.php'; ?>
 
-<!-- Custom CSS para melhorar o layout -->
+<!-- Custom CSS -->
 <style>
     .img-thumbnail {
         border-radius: 50%;
@@ -218,7 +222,7 @@ $social_links = $stmt_social->fetchAll(PDO::FETCH_ASSOC);
 
     .icon-picker {
         display: grid;
-        grid-template-columns: repeat(8, 1fr); /* 8 ícones por linha */
+        grid-template-columns: repeat(8, 1fr);
         gap: 0px;
     }
 
@@ -244,10 +248,6 @@ $social_links = $stmt_social->fetchAll(PDO::FETCH_ASSOC);
         color: #007bff;
     }
 
-    .icon-label input:checked {
-        border-color: #007bff;
-    }
-
     .icon-label:hover {
         border-color: #007bff;
     }
@@ -257,21 +257,21 @@ $social_links = $stmt_social->fetchAll(PDO::FETCH_ASSOC);
     }
 </style>
 
-<!-- JavaScript para adicionar novos campos de redes sociais -->
+<!-- JavaScript para adicionar/remover campos de redes sociais -->
 <script>
     let socialLinkIndex = <?= count($social_links); ?>;
-    
+
     document.getElementById('add-social-link').addEventListener('click', function() {
         socialLinkIndex++;
         const socialLinkTemplate = `
             <div class="row social-link-item">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <input type="text" name="social_links[${socialLinkIndex}][network]" class="form-control" placeholder="Nome da Rede Social">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <input type="url" name="social_links[${socialLinkIndex}][url]" class="form-control" placeholder="Link do Perfil">
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <button type="button" class="btn btn-secondary toggle-icon-picker" data-target="#icon-picker-${socialLinkIndex}">Selecionar Ícone</button>
                     <div id="icon-picker-${socialLinkIndex}" class="icon-picker mt-3" style="display: none;">
                         <?php foreach ($icons as $icon): ?>
@@ -282,17 +282,30 @@ $social_links = $stmt_social->fetchAll(PDO::FETCH_ASSOC);
                         <?php endforeach; ?>
                     </div>
                 </div>
+                <div class="col-md-3 text-right">
+                    <button type="button" class="btn btn-danger remove-social-link">X</button>
+                </div>
             </div>`;
         document.getElementById('social-links-container').insertAdjacentHTML('beforeend', socialLinkTemplate);
 
-        // Adiciona funcionalidade de mostrar/ocultar ícones de redes sociais
         document.querySelector(`.toggle-icon-picker[data-target="#icon-picker-${socialLinkIndex}"]`).addEventListener('click', function() {
             const target = document.querySelector(`#icon-picker-${socialLinkIndex}`);
             target.style.display = target.style.display === 'none' ? 'grid' : 'none';
         });
+
+        document.querySelectorAll('.remove-social-link').forEach(function(button) {
+            button.addEventListener('click', function() {
+                this.closest('.social-link-item').remove();
+            });
+        });
     });
 
-    // Adicionar eventos de clique para todos os ícones
+    document.querySelectorAll('.remove-social-link').forEach(function(button) {
+        button.addEventListener('click', function() {
+            this.closest('.social-link-item').remove();
+        });
+    });
+
     document.querySelectorAll('.toggle-icon-picker').forEach(function(button) {
         button.addEventListener('click', function() {
             const target = document.querySelector(button.getAttribute('data-target'));
