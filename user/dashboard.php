@@ -35,7 +35,7 @@ $links = $stmt_links->fetchAll(PDO::FETCH_ASSOC);
                                 <img src="../assets/img/default_profile_icon.png" alt="Ícone de Perfil Padrão" class="img-thumbnail rounded-circle" width="150">
                             <?php endif; ?>
                             <a href="profile.php" class="btn btn-primary mt-3">Editar Perfil</a>
-                            <a href="/atletica/<?= htmlspecialchars($user['username']); ?>" class="btn btn-success mt-3">Ver Perfil</a>
+                            <a href="/atletica/user/<?= htmlspecialchars($user['username']); ?>" class="btn btn-success mt-3">Ver Perfil</a>
                         </div>
                     </div>
                 </div>
