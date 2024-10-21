@@ -89,56 +89,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                                     <div class="form-group">
                                         <label for="badge_icon_<?= $i ?>">Ícone do Badge <?= $i ?></label>
                                         <div class="icon-picker">
-                                            <?php
-                                            $icons = [
-                                                'fa-star',
-                                                'fa-heart',
-                                                'fa-check',
-                                                'fa-cog',
-                                                'fa-user',
-                                                'fa-car',
-                                                'fa-home',
-                                                'fa-lock',
-                                                'fa-key',
-                                                'fa-phone',
-                                                'fa-envelope',
-                                                'fa-bell',
-                                                'fa-camera',
-                                                'fa-coffee',
-                                                'fa-comment',
-                                                'fa-compass',
-                                                'fa-download',
-                                                'fa-edit',
-                                                'fa-globe',
-                                                'fa-graduation-cap',
-                                                'fa-hammer',
-                                                'fa-headphones',
-                                                'fa-laptop',
-                                                'fa-lightbulb',
-                                                'fa-map',
-                                                'fa-music',
-                                                'fa-paper-plane',
-                                                'fa-plane',
-                                                'fa-smile',
-                                                'fa-snowflake',
-                                                'fa-sun',
-                                                'fa-sync',
-                                                'fa-thumbs-up',
-                                                'fa-umbrella',
-                                                'fa-user-circle',
-                                                'fa-user-md',
-                                                'fa-users',
-                                                'fa-video',
-                                                'fa-wifi',
-                                                'fa-rocket'
-                                            ];
-                                            foreach ($icons as $icon): ?>
-                                                <label class="icon-label">
-                                                    <input type="radio" name="badge_icon_<?= $i ?>" value="<?= $icon ?>" <?= isset($badges[$i - 1]) && $badges[$i - 1]['icon'] == $icon ? 'checked' : ''; ?>>
-                                                    <i class="fas <?= $icon ?> fa-3x"></i>
-                                                </label>
-                                            <?php endforeach; ?>
-                                        </div>
+    <?php
+    $icons = [
+        'fa-star', 'fa-heart', 'fa-check', 'fa-cog', 'fa-user', 'fa-car', 'fa-home', 'fa-lock', 
+        'fa-key', 'fa-phone', 'fa-envelope', 'fa-bell', 'fa-camera', 'fa-coffee', 'fa-comment', 
+        'fa-compass', 'fa-download', 'fa-edit', 'fa-globe', 'fa-graduation-cap', 'fa-hammer', 
+        'fa-headphones', 'fa-laptop', 'fa-lightbulb', 'fa-map', 'fa-music', 'fa-paper-plane', 
+        'fa-plane', 'fa-smile', 'fa-snowflake', 'fa-sun', 'fa-sync', 'fa-thumbs-up', 'fa-umbrella', 
+        'fa-user-circle', 'fa-user-md', 'fa-users', 'fa-video', 'fa-wifi', 'fa-rocket', 
+        'fa-book', 'fa-bookmark', 'fa-briefcase', 'fa-calendar', 'fa-chart-bar', 'fa-cloud', 
+        'fa-database', 'fa-fingerprint', 'fa-gift', 'fa-keyboard', 'fa-leaf', 'fa-life-ring', 
+        'fa-microphone', 'fa-mobile', 'fa-moon', 'fa-palette', 'fa-pizza-slice', 'fa-search', 
+        'fa-shield-alt', 'fa-shopping-cart', 'fa-tree', 'fa-trophy', 'fa-tv', 'fa-umbrella-beach'
+    ];
+    foreach ($icons as $icon): ?>
+        <label class="icon-label">
+            <input type="radio" name="badge_icon_<?= $i ?>" value="<?= $icon ?>" <?= isset($badges[$i - 1]) && $badges[$i - 1]['icon'] == $icon ? 'checked' : ''; ?>>
+            <i class="fas <?= $icon ?> fa-3x"></i>
+        </label>
+    <?php endforeach; ?>
+</div>
+
 
                                     </div>
                                 </div>
@@ -192,41 +163,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     .icon-picker {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        align-items: center;
-        gap: 10px;
-    }
+    display: grid;
+    grid-template-columns: repeat(8, 1fr); /* 8 ícones por linha */
+    gap: 10px;
+    justify-content: space-around;
+    align-items: center;
+}
 
-    .icon-label {
-        text-align: center;
-        cursor: pointer;
-        padding: 10px;
-        border: 2px solid transparent;
-        transition: border-color 0.3s;
-    }
+.icon-label {
+    text-align: center;
+    cursor: pointer;
+    padding: 10px;
+    border: 2px solid transparent;
+    transition: border-color 0.3s;
+}
 
-    .icon-label input {
-        display: none;
-    }
+.icon-label input {
+    display: none;
+}
 
-    .icon-label i {
-        color: #333;
-        transition: color 0.3s;
-    }
+.icon-label i {
+    color: #333;
+    transition: color 0.3s;
+}
 
-    .icon-label input:checked+i {
-        color: #007bff;
-    }
+.icon-label input:checked + i {
+    color: #007bff;
+}
 
-    .icon-label input:checked {
-        border-color: #007bff;
-    }
+.icon-label input:checked {
+    border-color: #007bff;
+}
 
-    .icon-label:hover {
-        border-color: #007bff;
-    }
+.icon-label:hover {
+    border-color: #007bff;
+}
+
 
 
     /* Botões estilizados */

@@ -5,11 +5,10 @@ $errors = [];
 $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Verifique se os campos estão definidos no POST
-    $username = isset($_POST['username']) ? trim($_POST['username']) : '';
-    $email = isset($_POST['email']) ? trim($_POST['email']) : '';
-    $password = isset($_POST['password']) ? trim($_POST['password']) : '';
-    $confirm_password = isset($_POST['confirm_password']) ? trim($_POST['confirm_password']) : '';
+    $username = trim($_POST['username']);
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+    $confirm_password = trim($_POST['confirm_password']);
 
     // Validação básica
     if (empty($username) || empty($email) || empty($password) || empty($confirm_password)) {
@@ -17,9 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif ($password !== $confirm_password) {
         $errors[] = "As senhas não coincidem.";
     } else {
-        // Verificação da força da senha
-        if (strlen($password) < 8 || !preg_match('/[A-Z]/', $password) || !preg_match('/[a-z]/', $password) || !preg_match('/[0-9]/', $password) || !preg_match('/[\W]/', $password)) {
-            $errors[] = "A senha deve ter pelo menos 8 caracteres, incluindo letras maiúsculas, minúsculas, números e símbolos.";
+        // Validação de força da senha menos rigorosa
+        if (strlen($password) < 6 || !preg_match('/[A-Z]/', $password) || !preg_match('/[0-9]/', $password)) {
+            $errors[] = "A senha deve ter pelo menos 6 caracteres, incluindo letras maiúsculas e números.";
         } else {
             // Verificar se o email ou nome de usuário já estão registrados
             $stmt = $conn->prepare("SELECT id FROM users WHERE email = :email OR username = :username");
@@ -49,22 +48,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
                 // Enviar email de ativação
                 $subject = "Confirme sua conta";
-                $message = "Olá $username,\n\n";
-                $message .= "Por favor, clique no link abaixo para ativar sua conta:\n\n";
-                $message .= "https://projetos.rajo.com.br/atletica/user/activate.php?code=$activation_code\n\n";
-                $message .= "Obrigado!";
-                $headers = "From: Atlética WeStudy <no-reply@projetos.rajo.com.br>\r\n";
+                $message = "Olá $username,\n\nPor favor, clique no link abaixo para ativar sua conta:\n\n";
+                $message .= "https://projetos.rajo.com.br/atletica/user/activate.php?code=$activation_code\n\nObrigado!";
+                $headers = "From: Meu Sistema <no-reply@projetos.rajo.com.br>\r\n";
                 $headers .= "Reply-To: no-reply@projetos.rajo.com.br\r\n";
                 $headers .= "X-Mailer: PHP/" . phpversion();
 
-                // Diagnóstico de envio de email
                 if (mail($email, $subject, $message, $headers)) {
-                    // Redireciona o usuário para a página inicial com uma mensagem de sucesso
+                    $success = "Um email de confirmação foi enviado. Por favor, verifique sua caixa de entrada.";
                     header("Location: https://projetos.rajo.com.br/atletica/index.php?success=1");
                     exit();
                 } else {
                     error_log("Falha no envio de email para: $email");
-                    $errors[] = "Ocorreu um erro ao enviar o email de confirmação. Verifique se o servidor suporta o envio de emails.";
+                    $errors[] = "Ocorreu um erro ao enviar o email de confirmação.";
                 }
             }
         }
@@ -75,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <?php include '../includes/header.php'; ?>
 
 <div class="container mt-5">
-    <h2 class="text-center">Cadastre-se</h2>
+    <h2>Cadastre-se</h2>
     <?php if (!empty($errors)): ?>
         <div class="alert alert-danger">
             <ul>
@@ -86,69 +82,90 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     <?php endif; ?>
 
-    <?php if (!empty($success)): ?>
-        <div class="alert alert-success">
-            <?= $success; ?>
+    <form action="register.php" method="POST">
+        <div class="form-group">
+            <label for="username">Nome de Usuário</label>
+            <input type="text" name="username" id="username" class="form-control" required>
         </div>
-    <?php else: ?>
-        <form action="register.php" method="POST" class="p-4 shadow rounded bg-white">
-            <div class="form-group">
-                <label for="username">Nome de Usuário</label>
-                <input type="text" name="username" id="username" class="form-control form-control-lg" required>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Senha</label>
+            <div class="input-group">
+                <input type="password" name="password" id="password" class="form-control" required>
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i class="fas fa-eye" id="togglePassword" style="cursor: pointer;"></i>
+                    </span>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" name="email" id="email" class="form-control form-control-lg" required>
+            <small id="strengthMessage" class="form-text text-muted"></small>
+            <div class="progress mt-2">
+                <div class="progress-bar" id="passwordStrength" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
-            <div class="form-group">
-                <label for="password">Senha</label>
-                <input type="password" name="password" id="password" class="form-control form-control-lg" required>
-                <small id="strengthMessage" class="form-text text-muted"></small>
-            </div>
-            <div class="form-group">
-                <label for="confirm_password">Confirme sua Senha</label>
-                <input type="password" name="confirm_password" id="confirm_password" class="form-control form-control-lg" required>
-            </div>
-            <button type="submit" class="btn btn-primary btn-lg btn-block">Cadastrar</button>
-        </form>
-    <?php endif; ?>
+        </div>
+        <div class="form-group">
+            <label for="confirm_password">Confirme sua Senha</label>
+            <input type="password" name="confirm_password" id="confirm_password" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
+    </form>
 </div>
 
+<?php include '../includes/footer.php'; ?>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    // Mostra/Oculta a senha
+    document.getElementById('togglePassword').addEventListener('click', function () {
         const passwordInput = document.getElementById('password');
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+    });
+
+    // Validação e medidor de força de senha
+    document.getElementById('password').addEventListener('input', function () {
+        const password = this.value;
         const strengthMessage = document.getElementById('strengthMessage');
+        const progressBar = document.getElementById('passwordStrength');
+        let strength = 0;
 
-        passwordInput.addEventListener('input', function() {
-            const password = passwordInput.value;
-            let strength = 0;
+        if (password.length >= 6) strength += 1;
+        if (/[A-Z]/.test(password)) strength += 1;
+        if (/[a-z]/.test(password)) strength += 1;
+        if (/[0-9]/.test(password)) strength += 1;
+        if (/[\W]/.test(password)) strength += 1;
 
-            if (password.length >= 8) strength += 1;
-            if (/[A-Z]/.test(password)) strength += 1;
-            if (/[a-z]/.test(password)) strength += 1;
-            if (/[0-9]/.test(password)) strength += 1;
-            if (/[\W]/.test(password)) strength += 1;
-
-            switch (strength) {
-                case 1:
-                case 2:
-                    strengthMessage.textContent = 'Senha Fraca';
-                    strengthMessage.style.color = 'red';
-                    break;
-                case 3:
-                    strengthMessage.textContent = 'Senha Média';
-                    strengthMessage.style.color = 'orange';
-                    break;
-                case 4:
-                case 5:
-                    strengthMessage.textContent = 'Senha Forte';
-                    strengthMessage.style.color = 'green';
-                    break;
-                default:
-                    strengthMessage.textContent = '';
-            }
-        });
+        switch (strength) {
+            case 1:
+            case 2:
+                strengthMessage.textContent = 'Senha Fraca';
+                progressBar.style.width = '25%';
+                progressBar.classList.add('bg-danger');
+                progressBar.classList.remove('bg-warning', 'bg-success');
+                break;
+            case 3:
+                strengthMessage.textContent = 'Senha Média';
+                progressBar.style.width = '50%';
+                progressBar.classList.add('bg-warning');
+                progressBar.classList.remove('bg-danger', 'bg-success');
+                break;
+            case 4:
+            case 5:
+                strengthMessage.textContent = 'Senha Forte';
+                progressBar.style.width = '100%';
+                progressBar.classList.add('bg-success');
+                progressBar.classList.remove('bg-danger', 'bg-warning');
+                break;
+            default:
+                strengthMessage.textContent = '';
+                progressBar.style.width = '0%';
+                break;
+        }
     });
 </script>
+
 
 <?php include '../includes/footer.php'; ?>

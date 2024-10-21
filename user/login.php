@@ -27,36 +27,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <?php include '../includes/header.php'; ?>
 
 <div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <h2 class="text-center">Login</h2>
-            
-            <?php if (!empty($errors)): ?>
-                <div class="alert alert-danger text-center shadow-sm rounded p-3">
-                    <ul class="list-unstyled">
-                        <?php foreach ($errors as $error): ?>
-                            <li><?= $error; ?></li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            <?php endif; ?>
-            
-            <form action="login.php" method="POST" class="shadow-sm p-4 bg-white rounded">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" name="email" id="email" class="form-control form-control-lg" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Senha</label>
-                    <input type="password" name="password" id="password" class="form-control form-control-lg" required>
-                </div>
-                <button type="submit" class="btn btn-primary btn-lg btn-block">Login</button>
-                <div class="mt-3 text-center">
-                    <a href="register.php" class="text-primary">Não tem uma conta? Cadastre-se</a>
-                </div>
-            </form>
+    <h2>Login</h2>
+    <?php if (!empty($errors)): ?>
+        <div class="alert alert-danger">
+            <ul>
+                <?php foreach ($errors as $error): ?>
+                    <li><?= $error; ?></li>
+                <?php endforeach; ?>
+            </ul>
         </div>
-    </div>
+    <?php endif; ?>
+    
+    <form action="login.php" method="POST">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" class="form-control" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Senha</label>
+            <div class="input-group">
+                <input type="password" name="password" id="password" class="form-control" required>
+                <div class="input-group-append">
+                    <span class="input-group-text">
+                        <i class="fas fa-eye" id="togglePassword" style="cursor: pointer;"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Login</button>
+    </form>
 </div>
+
+<?php include '../includes/footer.php'; ?>
+
+<script>
+    // Mostra/Oculta a senha
+    document.getElementById('togglePassword').addEventListener('click', function () {
+        const passwordInput = document.getElementById('password');
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+    });
+</script>
+
 
 <?php include '../includes/footer.php'; ?>
