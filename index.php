@@ -15,8 +15,8 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php foreach ($users as $user): ?>
             <div class="col-md-4 text-center mb-5">
                 <div class="user-card">
-                    <!-- Link para o perfil do usuário -->
-                    <a href="/atletica/<?= htmlspecialchars($user['username']); ?>">
+                    <!-- Link para o perfil do usuário com o formato tradicional -->
+                    <a href="/atletica/user/public_profile.php?username=<?= htmlspecialchars($user['username']); ?>">
                         <div class="profile-image-wrapper">
                             <!-- Foto de perfil redonda -->
                             <?php if (!empty($user['profile_image'])): ?>
@@ -36,3 +36,51 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <?php include 'includes/footer.php'; ?>
+
+<!-- Custom CSS for styling and hover effects -->
+<style>
+    .profile-image-wrapper {
+        width: 150px;
+        height: 150px;
+        margin: 0 auto;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .profile-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Efeito ao passar o mouse */
+    .profile-image-wrapper:hover .profile-image {
+        transform: scale(1.1);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .username {
+        font-size: 14px;
+        color: #555;
+    }
+
+    .full-name {
+        font-size: 18px;
+        color: #000;
+        font-weight: bold;
+    }
+
+    /* Centraliza os itens e define o layout */
+    .user-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Remove o sublinhado dos links */
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+</style>
