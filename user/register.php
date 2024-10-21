@@ -53,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $message .= "Por favor, clique no link abaixo para ativar sua conta:\n\n";
                 $message .= "https://projetos.rajo.com.br/atletica/user/activate.php?code=$activation_code\n\n";
                 $message .= "Obrigado!";
-                $headers = "From: Meu Sistema <no-reply@projetos.rajo.com.br>\r\n";
+                $headers = "From: Atlética WeStudy <no-reply@projetos.rajo.com.br>\r\n";
                 $headers .= "Reply-To: no-reply@projetos.rajo.com.br\r\n";
                 $headers .= "X-Mailer: PHP/" . phpversion();
 

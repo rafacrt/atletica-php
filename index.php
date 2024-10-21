@@ -1,16 +1,35 @@
+<?php
+require 'includes/db_connect.php';
+
+// Recupera os usuários cadastrados
+$stmt = $conn->prepare("SELECT username, full_name, profile_image FROM users WHERE is_active = 1");
+$stmt->execute();
+$users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <?php include 'includes/header.php'; ?>
 
-<div class="container mt-5 text-center">
-    <?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
-        <div class="alert alert-success">
-            Cadastro realizado com sucesso! Por favor, verifique seu email para ativar sua conta.
-        </div>
-    <?php endif; ?>
-
-    <h1>Bem-vindo ao Meu Sistema de Links Personalizados</h1>
-    <p>Crie e compartilhe seus links personalizados em um único lugar. Organize seus links em categorias, personalize seu perfil, e muito mais!</p>
-    <a href="https://projetos.rajo.com.br/atletica/user/register.php" class="btn btn-primary btn-lg">Cadastre-se</a>
-    <a href="https://projetos.rajo.com.br/atletica/user/login.php" class="btn btn-secondary btn-lg">Login</a>
+<div class="container mt-5">
+    <h2 class="text-center">Usuários Cadastrados</h2>
+    <div class="row justify-content-center">
+        <?php foreach ($users as $user): ?>
+            <div class="col-md-4 text-center mb-5">
+                <div class="user-card">
+                    <!-- Foto de perfil redonda -->
+                    <div class="profile-image-wrapper">
+                        <?php if (!empty($user['profile_image'])): ?>
+                            <img src="assets/img/<?= htmlspecialchars($user['profile_image']); ?>" alt="Foto de Perfil" class="profile-image img-fluid rounded-circle">
+                        <?php else: ?>
+                            <img src="assets/img/default_profile.png" alt="Foto de Perfil Padrão" class="profile-image img-fluid rounded-circle">
+                        <?php endif; ?>
+                    </div>
+                    <!-- Nome de usuário e nome completo -->
+                    <p class="username small mt-2"><?= htmlspecialchars($user['username']); ?></p>
+                    <p class="full-name h5"><?= htmlspecialchars($user['full_name']); ?></p>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
 </div>
 
 <?php include 'includes/footer.php'; ?>
