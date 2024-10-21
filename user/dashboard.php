@@ -191,6 +191,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         object-fit: cover;
     }
 
+    .icon-picker {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .icon-label {
+        text-align: center;
+        cursor: pointer;
+        padding: 10px;
+        border: 2px solid transparent;
+        transition: border-color 0.3s;
+    }
+
+    .icon-label input {
+        display: none;
+    }
+
+    .icon-label i {
+        color: #333;
+        transition: color 0.3s;
+    }
+
+    .icon-label input:checked+i {
+        color: #007bff;
+    }
+
+    .icon-label input:checked {
+        border-color: #007bff;
+    }
+
+    .icon-label:hover {
+        border-color: #007bff;
+    }
+
+
     /* Botões estilizados */
     .btn-outline-primary {
         border-color: #007bff;
