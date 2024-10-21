@@ -12,6 +12,11 @@ $stmt = $conn->prepare("SELECT * FROM users WHERE username = :username");
 $stmt->execute(['username' => $_SESSION['username']]);
 $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// Recupera os badges do usuário
+$stmt_badges = $conn->prepare("SELECT * FROM badges WHERE user_id = :user_id");
+$stmt_badges->execute(['user_id' => $user['id']]);
+$badges = $stmt_badges->fetchAll(PDO::FETCH_ASSOC);
+
 // Recupera os links do usuário
 $stmt_links = $conn->prepare("SELECT * FROM links WHERE user_id = :user_id ORDER BY position ASC");
 $stmt_links->execute(['user_id' => $user['id']]);
@@ -51,8 +56,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <div class="container mt-5">
     <div class="row">
-        <!-- Seção de Links Acima -->
-        <div class="col-md-12">
+        <!-- Seção de Perfil à Direita -->
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="card-title">Perfil</h5>
+                    <?php if (!empty($user['profile_image'])): ?>
+                        <img src="../assets/img/<?= htmlspecialchars($user['profile_image']); ?>" alt="Foto de Perfil" class="img-thumbnail rounded-circle" width="150">
+                    <?php else: ?>
+                        <img src="../assets/img/default_profile_icon.png" alt="Ícone de Perfil Padrão" class="img-thumbnail rounded-circle" width="150">
+                    <?php endif; ?>
+                    <p class="mt-3"><?= htmlspecialchars($user['full_name']); ?></p>
+                    <a href="profile.php" class="btn btn-outline-primary mt-3">Editar Perfil</a>
+                    <a href="/atletica/user/public_profile.php?username=<?= htmlspecialchars($user['username']); ?>" class="btn btn-success mt-3">Ver Perfil</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção de Links à Esquerda -->
+        <div class="col-md-8">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Seus Links</h5>
@@ -76,9 +98,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Seção de Badges Abaixo -->
-        <div class="col-md-12 mt-5">
+    <!-- Seção de Badges -->
+    <div class="row mt-5">
+        <div class="col-md-12">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Escolha seus Badges</h5>
@@ -187,4 +211,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     });
 </script>
-
