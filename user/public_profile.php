@@ -29,7 +29,7 @@ if (isset($_GET['username'])) {
 <?php include '../includes/header.php'; ?>
 
 <!-- Página de Perfil Público Estilo Linktree -->
-<div class="container text-center mt-5" style="background-color: <?= htmlspecialchars($user['theme_color']); ?>; padding: 50px; border-radius: 15px;">
+<div class="container text-center mt-5">
     <h2><?= htmlspecialchars($user['username']); ?></h2>
 
     <?php if (!empty($user['profile_image'])): ?>
