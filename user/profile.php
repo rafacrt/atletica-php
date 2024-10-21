@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $theme_color = trim($_POST['theme_color']);
     $profile_image = null;
 
-    // Verificar se uma nova imagem de perfil foi enviada
+    // Verifica se uma nova imagem de perfil foi enviada
     if (!empty($_FILES['profile_image']['name'])) {
         $target_dir = "../assets/img/";
         $profile_image = $target_dir . basename($_FILES["profile_image"]["name"]);
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <?php include '../includes/header.php'; ?>
 
 <div class="container mt-5">
-    <h2>Editar Perfil</h2>
+    <h2 class="text-center">Editar Perfil</h2>
 
     <?php if (!empty($success)): ?>
         <div class="alert alert-success">
@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     <?php endif; ?>
 
-    <form action="profile.php" method="POST" enctype="multipart/form-data">
+    <form action="profile.php" method="POST" enctype="multipart/form-data" class="form-boxed">
         <div class="form-group">
             <label for="full_name">Nome Completo</label>
             <input type="text" name="full_name" id="full_name" class="form-control" value="<?= htmlspecialchars($user['full_name']); ?>">
@@ -69,16 +69,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <input type="color" name="theme_color" id="theme_color" class="form-control" value="<?= htmlspecialchars($user['theme_color']); ?>">
         </div>
 
-        <div class="form-group">
-            <label for="profile_image">Foto de Perfil</label>
+        <!-- Exibir ou mudar a foto de perfil -->
+        <div class="form-group text-center">
             <?php if (!empty($user['profile_image'])): ?>
-                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#profileImageModal">Mudar Foto de Perfil</button>
+                <img src="../assets/img/<?= htmlspecialchars($user['profile_image']); ?>" alt="Foto de Perfil" class="img-thumbnail rounded-circle" width="150">
+                <button type="button" class="btn btn-secondary mt-3" data-toggle="modal" data-target="#profileImageModal">Mudar Foto de Perfil</button>
             <?php else: ?>
                 <input type="file" name="profile_image" id="profile_image" class="form-control">
             <?php endif; ?>
         </div>
 
-        <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+        <button type="submit" class="btn btn-primary btn-block">Salvar Alterações</button>
     </form>
 </div>
 
@@ -106,3 +107,60 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </div>
 
 <?php include '../includes/footer.php'; ?>
+
+<!-- Custom CSS para estilizar -->
+<style>
+    .form-boxed {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .img-thumbnail {
+        border-radius: 50%;
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+    }
+
+    /* Estilizando os botões */
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .modal-title {
+        font-size: 20px;
+    }
+
+    .form-control {
+        padding: 10px;
+        border-radius: 5px;
+    }
+</style>

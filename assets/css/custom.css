@@ -236,3 +236,10 @@ h2 {
     flex-direction: column;
     align-items: center;
 }
+
+.img-thumbnail {
+    border-radius: 50% !important;
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
