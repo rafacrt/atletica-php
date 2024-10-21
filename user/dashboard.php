@@ -17,13 +17,17 @@ $stmt_badges = $conn->prepare("SELECT * FROM badges WHERE user_id = :user_id");
 $stmt_badges->execute(['user_id' => $user['id']]);
 $badges = $stmt_badges->fetchAll(PDO::FETCH_ASSOC);
 
+// Recupera os links do usuário
+$stmt_links = $conn->prepare("SELECT * FROM links WHERE user_id = :user_id ORDER BY position ASC");
+$stmt_links->execute(['user_id' => $user['id']]);
+$links = $stmt_links->fetchAll(PDO::FETCH_ASSOC);
+
 // Salvando os badges selecionados
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     for ($i = 1; $i <= 4; $i++) {
         $badge_title = $_POST["badge_title_$i"];
         $badge_icon = $_POST["badge_icon_$i"];
 
-        // Verifica se já existe um badge no banco de dados
         if (isset($badges[$i - 1])) {
             // Atualiza o badge existente
             $stmt = $conn->prepare("UPDATE badges SET title = :title, icon = :icon WHERE id = :id");
@@ -75,20 +79,59 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <div class="card-body">
                     <h5 class="card-title">Escolha seus Badges</h5>
                     <form action="dashboard.php" method="POST">
-                        <?php for ($i = 1; $i <= 4; $i++): ?>
-                            <div class="form-group">
-                                <label for="badge_title_<?= $i ?>">Título do Badge <?= $i ?></label>
-                                <input type="text" name="badge_title_<?= $i ?>" class="form-control" value="<?= isset($badges[$i - 1]) ? htmlspecialchars($badges[$i - 1]['title']) : ''; ?>" placeholder="Título do Badge <?= $i ?>">
-                                <label for="badge_icon_<?= $i ?>">Ícone do Badge <?= $i ?></label>
-                                <select name="badge_icon_<?= $i ?>" class="form-control">
-                                    <option value="fa-star" <?= isset($badges[$i - 1]) && $badges[$i - 1]['icon'] == 'fa-star' ? 'selected' : ''; ?>>Estrela</option>
-                                    <option value="fa-heart" <?= isset($badges[$i - 1]) && $badges[$i - 1]['icon'] == 'fa-heart' ? 'selected' : ''; ?>>Coração</option>
-                                    <!-- Adicione outros ícones conforme necessário -->
-                                </select>
-                            </div>
-                        <?php endfor; ?>
+                        <div class="row">
+                            <?php for ($i = 1; $i <= 4; $i++): ?>
+                                <div class="col-md-6 mb-4">
+                                    <div class="form-group">
+                                        <label for="badge_title_<?= $i ?>">Título do Badge <?= $i ?></label>
+                                        <input type="text" name="badge_title_<?= $i ?>" class="form-control" value="<?= isset($badges[$i - 1]) ? htmlspecialchars($badges[$i - 1]['title']) : ''; ?>" placeholder="Título do Badge <?= $i ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="badge_icon_<?= $i ?>">Ícone do Badge <?= $i ?></label>
+                                        <div class="icon-picker">
+                                            <?php
+                                            $icons = ['fa-star', 'fa-heart', 'fa-check', 'fa-cog']; // Adicione mais ícones conforme necessário
+                                            foreach ($icons as $icon): ?>
+                                                <label class="icon-label">
+                                                    <input type="radio" name="badge_icon_<?= $i ?>" value="<?= $icon ?>" <?= isset($badges[$i - 1]) && $badges[$i - 1]['icon'] == $icon ? 'checked' : ''; ?>>
+                                                    <i class="fas <?= $icon ?> fa-3x"></i>
+                                                </label>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endfor; ?>
+                        </div>
                         <button type="submit" class="btn btn-primary">Salvar Badges</button>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seção de Links -->
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Seus Links</h5>
+                    <a href="add_link.php" class="btn btn-primary mb-3">Adicionar Novo Link</a>
+
+                    <?php if (count($links) > 0): ?>
+                        <ul class="list-group">
+                            <?php foreach ($links as $link): ?>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span><?= htmlspecialchars($link['title']); ?> - <a href="<?= htmlspecialchars($link['url']); ?>" target="_blank"><?= htmlspecialchars($link['url']); ?></a></span>
+                                    <span>
+                                        <a href="edit_link.php?id=<?= $link['id']; ?>" class="btn btn-sm btn-warning">Editar</a>
+                                        <a href="delete_link.php?id=<?= $link['id']; ?>" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir este link?');">Excluir</a>
+                                    </span>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <p>Você ainda não adicionou nenhum link.</p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -97,18 +140,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <?php include '../includes/footer.php'; ?>
 
-
-<!-- Custom CSS -->
+<!-- Custom CSS para melhorar o layout -->
 <style>
-    .card {
-        border-radius: 10px;
-    }
-
     .img-thumbnail {
         border-radius: 50%;
         width: 150px;
         height: 150px;
         object-fit: cover;
+    }
+
+    /* Estilização para os ícones de seleção */
+    .icon-picker {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .icon-label {
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .icon-label input {
+        display: none;
+    }
+
+    .icon-label i {
+        color: #333;
+        transition: color 0.3s;
+    }
+
+    .icon-label input:checked + i {
+        color: #007bff;
     }
 
     /* Botões estilizados */
@@ -132,12 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         color: #fff;
     }
 
-    /* Layout melhorado para o dashboard */
-    .card-body {
-        padding: 20px;
-    }
-
-    .row {
-        margin-bottom: 30px;
+    .btn-primary {
+        transition: all 0.3s ease;
     }
 </style>
