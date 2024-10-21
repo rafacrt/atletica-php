@@ -165,15 +165,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     .icon-picker {
     display: grid;
     grid-template-columns: repeat(8, 1fr); /* 8 ícones por linha */
-    gap: 10px;
-    justify-content: space-around;
-    align-items: center;
+    gap: 10px; /* Espaçamento entre os ícones */
 }
 
 .icon-label {
     text-align: center;
     cursor: pointer;
-    padding: 10px;
+    padding: 5px;
     border: 2px solid transparent;
     transition: border-color 0.3s;
 }
@@ -184,6 +182,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 .icon-label i {
     color: #333;
+    font-size: 24px; /* Tamanho dos ícones ajustado */
     transition: color 0.3s;
 }
 
@@ -198,6 +197,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 .icon-label:hover {
     border-color: #007bff;
 }
+
 
 
 
