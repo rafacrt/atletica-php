@@ -25,6 +25,11 @@ if (isset($_GET['username'])) {
     $stmt_badges = $conn->prepare("SELECT * FROM badges WHERE user_id = :user_id");
     $stmt_badges->execute(['user_id' => $user['id']]);
     $badges = $stmt_badges->fetchAll(PDO::FETCH_ASSOC);
+
+    // Recupera as redes sociais do usuário
+    $stmt_social = $conn->prepare("SELECT * FROM social_links WHERE user_id = :user_id");
+    $stmt_social->execute(['user_id' => $user['id']]);
+    $social_links = $stmt_social->fetchAll(PDO::FETCH_ASSOC);
 } else {
     echo "Nenhum nome de usuário fornecido.";
     exit();
@@ -44,10 +49,22 @@ if (isset($_GET['username'])) {
                 <img src="../assets/img/default_profile.png" alt="Foto de Perfil Padrão" class="img-thumbnail rounded-circle" width="150">
             <?php endif; ?>
         </div>
-        <!-- Nome de usuário -->
+        <!-- Nome de usuário e descrição -->
         <div class="col-md-10">
             <h2><?= htmlspecialchars($user['username']); ?></h2>
-            <p><?= htmlspecialchars($user['description']); ?></p>
+            <p><?= isset($user['description']) ? htmlspecialchars($user['description']) : 'Nenhuma descrição disponível'; ?></p>
+        </div>
+    </div>
+
+    <!-- Redes Sociais -->
+    <div class="row mt-4">
+        <h3 class="col-12">Redes Sociais</h3>
+        <div class="col-12">
+            <?php foreach ($social_links as $social): ?>
+                <a href="<?= htmlspecialchars($social['url']); ?>" target="_blank" style="color: <?= htmlspecialchars($user['theme_color']); ?>; margin-right: 15px;">
+                    <i class="fab fa-<?= htmlspecialchars($social['network']); ?> fa-2x"></i>
+                </a>
+            <?php endforeach; ?>
         </div>
     </div>
 
@@ -91,5 +108,9 @@ if (isset($_GET['username'])) {
         padding: 15px;
         color: white;
         border: none;
+    }
+
+    .btn-block:hover {
+        opacity: 0.85;
     }
 </style>
