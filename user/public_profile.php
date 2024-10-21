@@ -10,7 +10,7 @@ if (isset($_GET['username'])) {
     $stmt->execute(['username' => $username]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Se o usuário não for encontrado
+    // Se o usuário não for encontrado, exibe mensagem de erro
     if (!$user) {
         echo "<h1>Usuário não encontrado!</h1>";
         exit();
